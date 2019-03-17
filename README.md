@@ -1,6 +1,6 @@
 # EBYTE
  
-<b><h1><center>EBYTE Transceivers</center></h1></b>
+<b><h2><center>EBYTE Transceivers</center></h1></b>
 
 This library is intended to be used with UART type EBYTE transceivers (E44-TTL-100 for example), small wireless units for MCU's such as
 Teensy and Arduino. This library lets users program the operating parameters and both send and receive data.
@@ -10,7 +10,7 @@ Hopefully, any changes or additions to constants can be a matter of copying the 
 
 Usage of this library consumes around 970 bytes
 
-<b> RBYTE Model numbers (only a partial list shown)</b>
+<b> EBYTE Model numbers (only a partial list shown)</b>
 Old model number scheme 
 E30-TTL-100,E30-490T20D, E31-TTL-100, E32-TTL-100, E32-TTL-500, E32-TTL-1W, E41-TTL-100, E41-TTL-100, E44-TTL-100, E44-TTL-500, E44-TTL-1W, E50-TTL-100, E50-TTL-500, E51-TTL-100, E51-TTL-500, E51-TTL-1W
 
@@ -52,11 +52,12 @@ General code usage
 Tips on usage
 
 For best range:
-1. data sheet indicates best results are with antennas 2meters off of ground
+<ul>
+<li>1. data sheet indicates best results are with antennas 2meters off of ground</li>
 2. line of sight ideal, but my personal testing, transmission still successful with some obstructions
 3. Slow air data rates can improve range, but due to longer transmission time, amount of data will be sacrificed
 4. consider high gain antennas (can be purchased from the manufacturer) see their web site
-
+</ul>
 Data transmission packets
 1. this library has a method for sending single bytes but if more data is to be sent, create a data structure and send using the SendStruct(&struct, sizeof(struct)) method. Note pass by ref so include the & before structure name
 2. again slow data rates take longer, you will need to experiment with ideal air data rate range based on data size
