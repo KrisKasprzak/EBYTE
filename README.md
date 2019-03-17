@@ -53,15 +53,18 @@ Tips on usage
 
 For best range:
 <ul>
-<li>1. data sheet indicates best results are with antennas 2meters off of ground</li>
-2. line of sight ideal, but my personal testing, transmission still successful with some obstructions
-3. Slow air data rates can improve range, but due to longer transmission time, amount of data will be sacrificed
-4. consider high gain antennas (can be purchased from the manufacturer) see their web site
+<li> Data sheet indicates best results are with antennas 2meters off of ground</li>
+<li> Line of sight ideal, but my personal testing, transmission still successful with some obstructions</li>
+<li> Slow air data rates can improve range, but due to longer transmission time, amount of data will be sacrificed</li>
+<li> Consider high gain antennas (can be purchased from the manufacturer) see their web site</li>
 </ul>
 Data transmission packets
-1. this library has a method for sending single bytes but if more data is to be sent, create a data structure and send using the SendStruct(&struct, sizeof(struct)) method. Note pass by ref so include the & before structure name
-2. again slow data rates take longer, you will need to experiment with ideal air data rate range based on data size
-
+<ul>
+<li> this library has a method for sending single bytes but if more data is to be sent, create a data structure and send using the SendStruct(&struct, sizeof(struct)) method. Note pass by ref so include the & before structure name</li>
+<li> again slow data rates take longer, you will need to experiment with ideal air data rate range based on data size</li>
+</ul>
 Debugging
-1. If you are using their 1W units, power the unit separately from the MCU's onboard power supply. The current draw may exceed the onboard rating resulting in destroying the MCU.
-2. If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)
+<ul>
+<li> If you are using their 1W units, power the unit separately from the MCU's onboard power supply. The current draw may exceed the onboard rating resulting in destroying the MCU.</li>
+<li> If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
+</ul>
