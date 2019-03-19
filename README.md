@@ -20,8 +20,7 @@ E32-915T20D, E32-915T20S, E32-915T30D, E32-915T30S, E32-170T30D, E32-400T20S,
 
 
   
-
-Module connection
+<b><h3> Module connection </b></h3>
 Module	MCU						Description
 MO		Any digital pin*		pin to control working/program modes
 M1		Any digital pin*		pin to control working/program modes
@@ -35,21 +34,20 @@ notes
 1. caution in connecting to Arduino pin 0 and 1 as those pins are for USB connection to PC, You may need a 4K7 pullup to Rx and AUX pins (possibly Tx) if using and Arduino, OR you may need a series 4K7 resistor between MCU Tx and the transceiver Rx.
 2. In some of my applications, I did not have enough digital pins to connect the Aux pin. No worries (just pass -1 in the argument list in the object create code). Then you will need to provide an appropriate delay() to let the transmission complete--experiment with the amount.
 
-Module source
+<b><h3>Manufacturers website</b></h3> 
 http://www.ebyte.com/en/
 example module this library is intended to be used with
 http://www.ebyte.com/en/product-view-news.aspx?id=174
 
-General code usage
+<b><h3>General code usage</b></h3> 
 1. Create a serial object
 2. Create EBYTE object that uses the serial object
 3. begin the serial object
 4. init() the EBYTE object
 5. set parameters (optional but required if sender and receiver are different)
-6. send or listen to sent data (single byte)
-7. Create and send a data structure
+6. send or listen to sent data (single byte) OR create and send a data structure
 
-Tips on usage
+<b><h3>Tips on usage</b></h3> 
 
 For best range:
 <ul>
@@ -58,12 +56,13 @@ For best range:
 <li> Slow air data rates can improve range, but due to longer transmission time, amount of data will be sacrificed</li>
 <li> Consider high gain antennas (can be purchased from the manufacturer) see their web site</li>
 </ul>
-Data transmission packets
+
+<b><h3>Data transmission packets</b></h3>
 <ul>
 <li> this library has a method for sending single bytes but if more data is to be sent, create a data structure and send using the SendStruct(&struct, sizeof(struct)) method. Note pass by ref so include the & before structure name</li>
 <li> again slow data rates take longer, you will need to experiment with ideal air data rate range based on data size</li>
 </ul>
-Debugging
+<b><h3>Debugging</b></h3>
 <ul>
 <li> If you are using their 1W units, power the unit separately from the MCU's onboard power supply. The current draw may exceed the onboard rating resulting in destroying the MCU.</li>
 <li> If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
