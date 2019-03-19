@@ -53,13 +53,13 @@ For best range:
 <ul>
 <li> Data sheet indicates best results are with antennas 2meters off of ground</li>
 <li> Line of sight ideal, but my personal testing, transmission still successful with some obstructions</li>
-<li> Slow air data rates can improve range, but due to longer transmission time, amount of data will be sacrificed</li>
-<li> Consider high gain antennas (can be purchased from the manufacturer) see their web site</li>
+<li> Slow air data rates can improve range, but due to longer transmission time, how often data can be sent will be sacrificed</li>
+<li> Consider high gain antennas (can be purchased from the manufacturer) see their web site for details</li>
 </ul>
 
 <b><h3>Data transmission packets</b></h3>
 <ul>
-<li> this library has a method for sending single bytes but if more data is to be sent, create a data structure and send using the SendStruct(&struct, sizeof(struct)) method. Note pass by ref so include the & before structure name</li>
+<li> this library has a method for sending single bytes but if more data is to be sent, create a data structure and send the data structure using the librarys SendStruct(&struct, sizeof(struct)) method. Note pass by ref so include the & before structure name</li>
 <li> again slow data rates take longer, you will need to experiment with ideal air data rate range based on data size</li>
 </ul>
 <b><h3>Debugging</b></h3>
