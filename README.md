@@ -22,11 +22,11 @@ E32-915T20D, E32-915T20S, E32-915T30D, E32-915T30S, E32-170T30D, E32-400T20S,
   
 <b><h3> Module connection </b></h3>
 Module	MCU						Description
-MO		Any digital pin*		pin to control working/program modes
-M1		Any digital pin*		pin to control working/program modes
+MO		Any digital pin*		pin to control working/program modes (you can omit with -1, but no module programming support)
+M1		Any digital pin*		pin to control working/program modes (you can omit with -1, but no module programming support)
 Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must receive data from module
 Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must receive data from module
-AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done)
+AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (you can omit with -1, but fixed recovery time used and may not be long enough)
 Vcc		+3v3 or 5V0				
 Vcc		Ground					Ground must be common to module and MCU		
 
