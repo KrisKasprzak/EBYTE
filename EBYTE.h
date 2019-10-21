@@ -1,66 +1,52 @@
 /*
-
   The MIT License (MIT)
-
   Copyright (c) 2019 Kris Kasrpzak
-
   Permission is hereby granted, free of charge, to any person obtaining a copy of
   this software and associated documentation files (the "Software"), to deal in
   the Software without restriction, including without limitation the rights to
   use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
   the Software, and to permit persons to whom the Software is furnished to do so,
   subject to the following conditions:
-
   The above copyright notice and this permission notice shall be included in all
   copies or substantial portions of the Software.
-
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
   FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
   IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
   On a personal note, if you develop an application or product using this library 
   and make millions of dollars, I'm happy for you!
-
 */
 
 /* 
-
   Code by Kris Kasprzak kris.kasprzak@yahoo.com
-
   This library is intended to be used with EBYTE transcievers, small wireless units for MCU's such as
   Teensy and Arduino. This library let's users program the operating parameters and both send and recieve data.
   This company makes several modules with different capabilities, but most #defines here should be compatible with them
   All constants were extracted from several data sheets and listed in binary as that's how the data sheet represented each setting
   Hopefully, any changes or additions to constants can be a matter of copying the data sheet constants directly into these #defines
-
   Usage of this library consumes around 970 bytes
-
   Revision		Data		Author			Description
   1.0			3/6/2019	Kasprzak		Initial creation
-  
+  2.0			10/21/2019	Kasprzak		modified code to allow no MO or M1 for use with limited wires
 
   Module connection
   Module	MCU						Description
-  MO		Any digital pin*		pin to control working/program modes
-  M1		Any digital pin*		pin to control working/program modes
+  MO		Any digital pin*		pin to control working/program modes (can omit with -1 but no programming support)
+  M1		Any digital pin*		pin to control working/program modes (can omit with -1 but no programming support)
   Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must recieve data from module
   Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must recieve data from module
-  AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done)
+  AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (can omit with -1 but manual timeout used--and may not be long enough)
   Vcc		+3v3 or 5V0				
   Vcc		Ground					Ground must be common to module and MCU		
-
   notes:
   * caution in connecting to Arduino pin 0 and 1 as those pins are for USB connection to PC
   you may need a 4K7 pullup to Rx and AUX pins (possibly Tx) if using and Arduino
-
   Module source
   http://www.ebyte.com/en/
   example module this library is intended to be used with
   http://www.ebyte.com/en/product-view-news.aspx?id=174
-
   Code usage
   1. Create a serial object
   2. Create EBYTE object that uses the serail object
@@ -106,12 +92,12 @@
 
 // air data rates (certian types of modules)
 // (must be the same for transmitter and reveiver)
-#define ADR_300 0b000		// 300 baud
-#define ADR_1200 0b001		// 1200 baud
-#define ADR_2400 0b010		// 2400 baud
-#define ADR_4800 0b011		// 4800 baud
-#define ADR_9600 0b100		// 9600 baud
-#define ADR_19200 0b101		// 19200 baud
+//#define ADR_300 0b000		// 300 baud
+//#define ADR_1200 0b001		// 1200 baud
+//#define ADR_2400 0b010		// 2400 baud
+//#define ADR_4800 0b011		// 4800 baud
+//#define ADR_9600 0b100		// 9600 baud
+//#define ADR_19200 0b101		// 19200 baud
 
 // air data rates (other types of modules)
 #define ADR_1K 0b000		// 1k baud
@@ -150,11 +136,11 @@
 #define OPT_TP21 0b11		// 21 db
 
 // constants or 500 mW units
-#define OPT_TP27 0b00		// 27 db
-#define OPT_TP24 0b01		// 24 db
-#define OPT_TP21 0b10		// 21 db
-#define OPT_TP18 0b11		// 17 db
-#define OPT_TP17 0b11		// 17 db
+//#define OPT_TP27 0b00		// 27 db
+//#define OPT_TP24 0b01		// 24 db
+//#define OPT_TP21 0b10		// 21 db
+//#define OPT_TP18 0b11		// 17 db
+//#define OPT_TP17 0b11		// 17 db
 
 // constants or 100 mW units
 #define OPT_TP20 0b00		// 20 db
@@ -171,7 +157,7 @@ class EBYTE {
 
 public:
 
-	EBYTE(Stream *s, uint8_t PIN_M0 = 4, uint8_t PIN_M1 = 5, uint8_t PIN_AUX = 6, unsigned long ReadTimeout = 1000);
+	EBYTE(Stream *s, int8_t PIN_M0 = 4, int8_t PIN_M1 = 5, int8_t PIN_AUX = 6, unsigned long ReadTimeout = 1000);
 
 	// code to initialize the library
 	// this method reads all parameters from the module and stores them
@@ -247,9 +233,10 @@ private:
 	Stream*  _TD;
 
 	// pin variables
-	uint8_t _M0;
-	uint8_t _M1;
-	uint8_t _AUX;
+	int8_t _M0;
+	int8_t _M1;
+	int8_t _AUX;
+	uint8_t _prog;
 
 	// variable for the 6 bytes that are sent to the module to program it
 	// or bytes received to indicate modules programmed settings
