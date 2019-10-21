@@ -22,13 +22,13 @@ E32-915T20D, E32-915T20S, E32-915T30D, E32-915T30S, E32-170T30D, E32-400T20S,
   
 <b><h3> Module connection </b></h3>
 Module	MCU						Description
-MO		Any digital pin*		pin to control working/program modes (you can omit with -1, but no module programming support)
-M1		Any digital pin*		pin to control working/program modes (you can omit with -1, but no module programming support)
-Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must receive data from module
-Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must receive data from module
-AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (you can omit with -1, but fixed recovery time used and may not be long enough)
-Vcc		+3v3 or 5V0				
-Vcc		Ground					Ground must be common to module and MCU		
+1. MO		Any digital pin*		pin to control working/program modes (you can omit with -1, but no module programming support)
+2. M1		Any digital pin*		pin to control working/program modes (you can omit with -1, but no module programming support)
+3. Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must receive data from module
+4. Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must receive data from module
+5. AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (you can omit with -1, but fixed recovery time used and may not be long enough)
+6. Vcc		+3v3 or 5V0				
+7. Vcc		Ground					Ground must be common to module and MCU		
 
 notes
 1. caution in connecting to Arduino pin 0 and 1 as those pins are for USB connection to PC, You may need a 4K7 pullup to Rx and AUX pins (possibly Tx) if using and Arduino, OR you may need a series 4K7 resistor between MCU Tx and the transceiver Rx.
