@@ -29,8 +29,9 @@
   Usage of this library consumes around 970 bytes
   Revision		Data		Author			Description
   1.0			3/6/2019	Kasprzak		Initial creation
-  2.0			10/21/2019	Kasprzak		modified code to allow no MO or M1 for use with limited wires
-   
+  2.0			3/2/2020	Kasprzak		Added all functions to build the options bit (FEC, Pullup, and TransmissionMode
+
+
 */
 
 #include <EBYTE.h>
@@ -46,7 +47,7 @@
 create the transciever object
 */
 
-EBYTE::EBYTE(Stream *s, int8_t PIN_M0, int8_t PIN_M1, int8_t PIN_AUX, unsigned long ReadTimeout )
+EBYTE::EBYTE(Stream *s, uint8_t PIN_M0, uint8_t PIN_M1, uint8_t PIN_AUX, unsigned long ReadTimeout )
 
 {
 
@@ -73,32 +74,29 @@ for potential future module programming
 bool EBYTE::init() {
 
 	bool ok = true;
-
 	if (_prog){
 
-		pinMode(_AUX, INPUT);
-		pinMode(_M0, OUTPUT);
-		pinMode(_M1, OUTPUT);
-		SetMode(MODE_NORMAL);
+	pinMode(_AUX, INPUT);
+	pinMode(_M0, OUTPUT);
+	pinMode(_M1, OUTPUT);
 	}
+	SetMode(MODE_NORMAL);
+	
 
 	_s->setTimeout(_rt);
 
 
 	// first get the module data (must be called first for some odd reason
 	if (_prog){
-		ok = ReadModelData();
+	ok = ReadModelData();
 	}
-
 	if (!ok) {
 		return false;
 	}
-
 	// now get parameters to put unit defaults into the class variables
 	if (_prog){
-		ok = ReadParameters();
+	ok = ReadParameters();
 	}
-
 	if (!ok) {
 		return false;
 	}
@@ -236,10 +234,8 @@ void EBYTE::SetMode(uint8_t mode) {
 	// data sheet claims module needs some extra time after mode setting (2ms)
 	// most of my projects uses 10 ms, but 40ms is safer
 	if (!_prog){
-		//Serial.println("M0 and M1 pins set to -1, mode setting can't be done");
 		return;
 	}
-
 	SmartDelay(40);
 	
 	if (mode == MODE_NORMAL) {
@@ -347,14 +343,7 @@ void EBYTE::SetAirDataRate(uint8_t val) {
 	BuildSpeedByte();
 }
 
-/*
-method to set the transmit power
-*/
 
-void EBYTE::SetTransmitPower(uint8_t val) {
-	_OptionPower = val;
-	BuildOptionByte();
-}
 
 /*
 method to set the parity bit
@@ -367,11 +356,30 @@ void EBYTE::SetParityBit(uint8_t val) {
 }
 
 /*
-method to set the wake up on timing bit
+method to set the options bits
 */
 
+void EBYTE::SetTransmissionMode(uint8_t val) {
+	_OptionTrans = val;
+	BuildOptionByte();
+}
+
+void EBYTE::SetPullupMode(uint8_t val) {
+	_OptionPullup = val;
+	BuildOptionByte();
+}
 void EBYTE::SetWORTIming(uint8_t val) {
 	_OptionWakeup = val;
+	BuildOptionByte();
+}
+
+void EBYTE::SetFECMode(uint8_t val) {
+	_OptionFEC = val;
+	BuildOptionByte();
+}
+
+void EBYTE::SetTransmitPower(uint8_t val) {
+	_OptionPower = val;
 	BuildOptionByte();
 }
 
@@ -429,11 +437,9 @@ method to save parameters to the module
 */
 
 void EBYTE::SaveParameters(uint8_t val) {
-	
-	if (!_prog){
+		if (!_prog){
 		return;
 	}
-
 	SetMode(MODE_PROGRAM);
 
 	// here you can save permanenly or temp
@@ -458,9 +464,7 @@ however...to make darn sure what you see is real, we'll call ReadParameters once
 */
 
 void EBYTE::PrintParameters() {
-
-	if (!_prog){
-		Serial.println("M0 and M1 pins set to -1, reading can't be done");
+		if (!_prog){
 		return;
 	}
 
@@ -509,9 +513,9 @@ method to read parameters,
 bool EBYTE::ReadParameters() {
 
 	if (!_prog){
-		return;
+		return false;
 	}
-
+	
 	// read basic parameters
 	_Params[0] = 0;
 	_Params[1] = 0;
@@ -561,7 +565,7 @@ bool EBYTE::ReadParameters() {
 bool EBYTE::ReadModelData() {
 
 	if (!_prog){
-		return;
+		return false;
 	}
 
 	_Params[0] = 0;

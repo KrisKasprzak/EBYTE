@@ -29,15 +29,15 @@
   Usage of this library consumes around 970 bytes
   Revision		Data		Author			Description
   1.0			3/6/2019	Kasprzak		Initial creation
-  2.0			10/21/2019	Kasprzak		modified code to allow no MO or M1 for use with limited wires
-
+  2.0			3/2/2020	Kasprzak		Added all functions to build the options bit (FEC, Pullup, and TransmissionMode
+  
   Module connection
   Module	MCU						Description
-  MO		Any digital pin*		pin to control working/program modes (can omit with -1 but no programming support)
-  M1		Any digital pin*		pin to control working/program modes (can omit with -1 but no programming support)
+  MO		Any digital pin*		pin to control working/program modes
+  M1		Any digital pin*		pin to control working/program modes
   Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must recieve data from module
   Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must recieve data from module
-  AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (can omit with -1 but manual timeout used--and may not be long enough)
+  AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done)
   Vcc		+3v3 or 5V0				
   Vcc		Ground					Ground must be common to module and MCU		
   notes:
@@ -92,12 +92,12 @@
 
 // air data rates (certian types of modules)
 // (must be the same for transmitter and reveiver)
-//#define ADR_300 0b000		// 300 baud
-//#define ADR_1200 0b001		// 1200 baud
-//#define ADR_2400 0b010		// 2400 baud
-//#define ADR_4800 0b011		// 4800 baud
-//#define ADR_9600 0b100		// 9600 baud
-//#define ADR_19200 0b101		// 19200 baud
+#define ADR_300 0b000		// 300 baud
+#define ADR_1200 0b001		// 1200 baud
+#define ADR_2400 0b010		// 2400 baud
+#define ADR_4800 0b011		// 4800 baud
+#define ADR_9600 0b100		// 9600 baud
+#define ADR_19200 0b101		// 19200 baud
 
 // air data rates (other types of modules)
 #define ADR_1K 0b000		// 1k baud
@@ -130,10 +130,10 @@
 // refer to the data sheet as not all modules support these power levels
 // constants for 1W units
 // (can be different for transmitter and reveiver)
-#define OPT_TP30 0b00		// 30 db
-#define OPT_TP27 0b01		// 27 db
-#define OPT_TP24 0b10		// 24 db
-#define OPT_TP21 0b11		// 21 db
+//#define OPT_TP30 0b00		// 30 db
+//#define OPT_TP27 0b01		// 27 db
+//#define OPT_TP24 0b10		// 24 db
+//#define OPT_TP21 0b11		// 21 db
 
 // constants or 500 mW units
 //#define OPT_TP27 0b00		// 27 db
@@ -157,7 +157,7 @@ class EBYTE {
 
 public:
 
-	EBYTE(Stream *s, int8_t PIN_M0 = 4, int8_t PIN_M1 = 5, int8_t PIN_AUX = 6, unsigned long ReadTimeout = 1000);
+	EBYTE(Stream *s, uint8_t PIN_M0 = 4, uint8_t PIN_M1 = 5, uint8_t PIN_AUX = 6, unsigned long ReadTimeout = 1000);
 
 	// code to initialize the library
 	// this method reads all parameters from the module and stores them
@@ -178,8 +178,15 @@ public:
 	void SetChannel(uint8_t val);
 	void Reset();
 	void SetParityBit(uint8_t val);
-	void SetTransmitPower(uint8_t val);
+	
+	//functions to set the options
+	void SetTransmissionMode(uint8_t val);
+	void SetPullupMode(uint8_t val);
 	void SetWORTIming(uint8_t val);
+	void SetFECMode(uint8_t val);
+	void SetTransmitPower(uint8_t val);
+
+
 	bool available();
 	void flush();
 	// methods to get some operating parameters
