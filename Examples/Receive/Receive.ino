@@ -10,8 +10,12 @@ if using and Arduino, you may need 4k7 pullups or inline resistors
 
 // include software serial libraries for Arduino
 // note the Teensy uses a #define to create the serial object
-#include <SoftwareSerial.h>
+
+// #include <SoftwareSerial.h> // this is for Arduinos
 #include "EBYTE.h"
+
+
+#define ESerial Serial1     // this is for Teensy see datasheet for pins Serial1 is RX=0, Tx=1
 
 // this is a simple data structure used to send/receive data, edit to your needs
 // you can send byte by byte and parse as needed, but that can be problematic
@@ -30,7 +34,7 @@ int Chan;
 DATA MyData;
 
 // create a serial object for Arduino, again Teensy uses a much simpler #define scenario
-SoftwareSerial ESerial(2, 3);
+// SoftwareSerial ESerial(2, 3); // for Arduinos
 
 // Now you MUST create the transceiver object and you must pass in the serail object use the & to pass by reference
 // usage for teensy is the exact same
@@ -57,14 +61,12 @@ void setup() {
   Transceiver.init();
 
 
-  // Transceiver.Reset(); // never call this, code not implemented
-
 // unless you are changing the factory settings you need not call any of these functions. Units will work out of the box and let you send and receive data
-  // Transceiver.SetAirDataRate(ADR_8K); 	// change the air data rate
-  // Transceiver.SetAddressH(0);		// set the high address byte
-  // Transceiver.SetAddressL(0);		// set the low address byte
-  // Transceiver.SetChannel(2);			// set the channel (0-32 is pretty typical)
-  // Transceiver.SaveParameters(PERMANENT);	// save the parameters to the EBYTE EEPROM, you can save temp if periodic changes are needed
+// Transceiver.SetAirDataRate(ADR_8K); 	// change the air data rate
+// Transceiver.SetAddressH(0);		// set the high address byte
+// Transceiver.SetAddressL(0);		// set the low address byte
+// Transceiver.SetChannel(2);			// set the channel (0-32 is pretty typical)
+// Transceiver.SaveParameters(PERMANENT);	// save the parameters to the EBYTE EEPROM, you can save temp if periodic changes are needed
 
 // if you want to see the units settings, otherwise never need to call this
    Transceiver.PrintParameters();
