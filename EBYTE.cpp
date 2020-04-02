@@ -30,8 +30,7 @@
   Revision		Data		Author			Description
   1.0			3/6/2019	Kasprzak		Initial creation
   2.0			3/2/2020	Kasprzak		Added all functions to build the options bit (FEC, Pullup, and TransmissionMode
-
-
+  3.0			3/27/2020	Kasprzak		Added more Get functions
 */
 
 #include <EBYTE.h>
@@ -51,17 +50,11 @@ EBYTE::EBYTE(Stream *s, uint8_t PIN_M0, uint8_t PIN_M1, uint8_t PIN_AUX, unsigne
 
 {
 
-	_prog = true;
-
 	_s = s;
 	_M0 = PIN_M0;
 	_M1 = PIN_M1;
 	_AUX = PIN_AUX;
 	_rt = ReadTimeout;
-
-	if ((_M0 == -1) & (_M1 == -1)){
-		_prog = false;
-	}
 
 		
 }
@@ -74,29 +67,26 @@ for potential future module programming
 bool EBYTE::init() {
 
 	bool ok = true;
-	if (_prog){
-
+	
 	pinMode(_AUX, INPUT);
 	pinMode(_M0, OUTPUT);
 	pinMode(_M1, OUTPUT);
-	}
+
 	SetMode(MODE_NORMAL);
 	
-
 	_s->setTimeout(_rt);
 
 
 	// first get the module data (must be called first for some odd reason
-	if (_prog){
+
 	ok = ReadModelData();
-	}
+
 	if (!ok) {
 		return false;
 	}
 	// now get parameters to put unit defaults into the class variables
-	if (_prog){
+
 	ok = ReadParameters();
-	}
 	if (!ok) {
 		return false;
 	}
@@ -160,6 +150,7 @@ types each handle ints floats differently
 
 bool EBYTE::SendStruct(const void *TheStructure, uint16_t size_) {
 
+
 		_buf = _s->write((uint8_t *) TheStructure, size_);
 		
 		CompleteTask(1000);
@@ -206,8 +197,11 @@ void EBYTE::CompleteTask(unsigned long timeout) {
 	// if AUX pin was supplied and look for HIGH state
 	// note you can omit using AUX if no pins are available, but you will have to use delay() to let module finish
 	if (_AUX != -1) {
+		
 		while (digitalRead(_AUX) == LOW) {
+			
 			if ((millis() - t) > timeout){
+				
 				break;
 			}
 		}
@@ -215,14 +209,14 @@ void EBYTE::CompleteTask(unsigned long timeout) {
 	else {
 		// if you can't use aux pin, use 4K7 pullup with Arduino
 		// you may need to adjust this value if transmissions fail
-		SmartDelay(100);
+		delay(1000);
 
 	}
 
 
 	// per data sheet control after aux goes high is 2ms so delay for at least that long)
-	SmartDelay(20);
-	
+	//SmartDelay(20);
+	delay(10);
 }
 
 /*
@@ -233,10 +227,8 @@ void EBYTE::SetMode(uint8_t mode) {
 	
 	// data sheet claims module needs some extra time after mode setting (2ms)
 	// most of my projects uses 10 ms, but 40ms is safer
-	if (!_prog){
-		return;
-	}
-	SmartDelay(40);
+
+	delay(PIN_RECOVER);
 	
 	if (mode == MODE_NORMAL) {
 		digitalWrite(_M0, LOW);
@@ -257,32 +249,13 @@ void EBYTE::SetMode(uint8_t mode) {
 
 	// data sheet says 2ms later control is returned, let's give just a bit more time
 	// these modules can take time to activate pins
-	SmartDelay(40);
+	delay(PIN_RECOVER);
 	
 	// wait until aux pin goes back low
-	CompleteTask(1000);
+	CompleteTask(4000);
 	
 }
 
-
-/*
-delay() in a library is not a good idea as it can stop interrupts
-just poll internal time until timeout is reached
-*/
-
-
-void EBYTE::SmartDelay(unsigned long timeout) {
-	
-	unsigned long t = millis();
-	
-	// make darn sure millis() is not about to reach max data type limit and start over
-	if (((unsigned long) (t + timeout)) == 0){
-		t = 0;
-	}
-	
-	while ((millis() - t) < timeout) 	{ 	}
-	
-}
 
 /*
 ya get in a bind and can't remember the factory defaults, call this
@@ -294,19 +267,38 @@ you would think we could look at _version and set defaults but version seems to 
 void EBYTE::Reset() {
 
 	// debug later.. i've yet to get this process to work
-	/*
+	
 	SetMode(MODE_PROGRAM);
+
+	delay(1000);
+
 	_s->write(0xC4);
 	_s->write(0xC4);
 	_s->write(0xC4);
+
+	CompleteTask(4000);
+
 	SetMode(MODE_NORMAL);
+
 	ReadParameters();
-	SaveParameters(PERMANENT);
-	*/
+		
 
 
 }
 
+
+void EBYTE::SetSpeed(uint8_t val) {
+	_Speed = val;
+}
+void EBYTE::SetOptions(uint8_t val) {
+	_Options = val;
+}
+uint8_t EBYTE::GetSpeed() {
+	return _Speed ;
+}
+uint8_t EBYTE::GetOptions() {
+	return _Options;
+}
 
 /*
 method to set the high bit of the address
@@ -315,6 +307,10 @@ method to set the high bit of the address
 
 void EBYTE::SetAddressH(uint8_t val) {
 	_AddressHigh = val;
+}
+
+uint8_t EBYTE::GetAddressH() {
+	return _AddressHigh;
 }
 
 /*
@@ -326,6 +322,11 @@ void EBYTE::SetAddressL(uint8_t val) {
 }
 
 
+uint8_t EBYTE::GetAddressL() {
+	return _AddressLow;
+}
+
+
 /*
 method to set the channel
 */
@@ -333,16 +334,25 @@ method to set the channel
 void EBYTE::SetChannel(uint8_t val) {
 	_Channel = val;
 }
+uint8_t EBYTE::GetChannel() {
+	return _Channel;
+}
+
 
 /*
 method to set the air data rate
 */
 
 void EBYTE::SetAirDataRate(uint8_t val) {
+
 	_AirDataRate = val;
 	BuildSpeedByte();
+	
 }
 
+uint8_t EBYTE::GetAirDataRate() {
+	return _AirDataRate;
+}
 
 
 /*
@@ -354,6 +364,9 @@ void EBYTE::SetParityBit(uint8_t val) {
 	_ParityBit = val;
 	BuildSpeedByte();
 }
+uint8_t EBYTE::GetParityBit( ) {
+	return _ParityBit;
+}
 
 /*
 method to set the options bits
@@ -363,25 +376,45 @@ void EBYTE::SetTransmissionMode(uint8_t val) {
 	_OptionTrans = val;
 	BuildOptionByte();
 }
+uint8_t EBYTE::GetTransmissionMode( ) {
+	return _OptionTrans;
+}
 
 void EBYTE::SetPullupMode(uint8_t val) {
 	_OptionPullup = val;
 	BuildOptionByte();
 }
+uint8_t EBYTE::GetPullupMode( ) {
+	return _OptionPullup;
+}
+
 void EBYTE::SetWORTIming(uint8_t val) {
 	_OptionWakeup = val;
 	BuildOptionByte();
+}
+uint8_t EBYTE::GetWORTIming() {
+	return _OptionWakeup;
 }
 
 void EBYTE::SetFECMode(uint8_t val) {
 	_OptionFEC = val;
 	BuildOptionByte();
 }
+uint8_t EBYTE::GetFECMode( ) {
+	return _OptionFEC;
+}
 
 void EBYTE::SetTransmitPower(uint8_t val) {
+
 	_OptionPower = val;
 	BuildOptionByte();
+
 }
+
+uint8_t EBYTE::GetTransmitPower() {
+	return _OptionPower;
+}
+
 
 
 /*
@@ -412,14 +445,16 @@ void EBYTE::SetUARTBaudRate(uint8_t val) {
 	BuildSpeedByte();
 }
 
+uint8_t EBYTE::GetUARTBaudRate() {
+	return _UARTDataRate;
+}
 
 /*
 method to build the byte for programming (notice it's a collection of a few variables)
 */
-
-
 void EBYTE::BuildSpeedByte() {
-	_Speed = ((_ParityBit & 0xFF) << 6) | ((_UARTDataRate & 0xFF) << 3) | (_AirDataRate);
+	_Speed = 0;
+	_Speed = ((_ParityBit & 0xFF) << 6) | ((_UARTDataRate & 0xFF) << 3) | (_AirDataRate & 0xFF);
 }
 
 
@@ -428,7 +463,8 @@ method to build the option byte for programming (notice it's a collection of a f
 */
 
 void EBYTE::BuildOptionByte() {
-	_Options = ((_OptionTrans & 0xFF) << 7) | ((_OptionPullup & 0xFF) << 6) | ((_OptionWakeup & 0xFF) << 3) | ((_OptionFEC & 0xFF) << 2) | (_OptionPower);
+	_Options = 0;
+	_Options = ((_OptionTrans & 0xFF) << 7) | ((_OptionPullup & 0xFF) << 6) | ((_OptionWakeup & 0xFF) << 3) | ((_OptionFEC & 0xFF) << 2) | (_OptionPower&0b11);
 }
 
 
@@ -437,23 +473,22 @@ method to save parameters to the module
 */
 
 void EBYTE::SaveParameters(uint8_t val) {
-		if (!_prog){
-		return;
-	}
+	
 	SetMode(MODE_PROGRAM);
-
+	
 	// here you can save permanenly or temp
-	_Save = val;
-	_s->write(_Save);
+	
+	_s->write(val);
 	_s->write(_AddressHigh);
 	_s->write(_AddressLow);
 	_s->write(_Speed);
 	_s->write(_Channel);
 	_s->write(_Options);
-
-	CompleteTask(100);
-
+	
+	CompleteTask(4000);
+	
 	SetMode(MODE_NORMAL);
+
 	
 }
 
@@ -464,11 +499,8 @@ however...to make darn sure what you see is real, we'll call ReadParameters once
 */
 
 void EBYTE::PrintParameters() {
-		if (!_prog){
-		return;
-	}
 
-	ReadParameters();		
+	// ReadParameters();		
 
 	_ParityBit = (_Speed & 0XC0) >> 6;
 	_UARTDataRate = (_Speed & 0X38) >> 3;
@@ -512,10 +544,6 @@ method to read parameters,
 
 bool EBYTE::ReadParameters() {
 
-	if (!_prog){
-		return false;
-	}
-	
 	// read basic parameters
 	_Params[0] = 0;
 	_Params[1] = 0;
@@ -529,9 +557,9 @@ bool EBYTE::ReadParameters() {
 	_s->write(0xC1);
 	_s->write(0xC1);
 	_s->write(0xC1);
-
-	_s->readBytes((uint8_t*)&_Params, (uint16_t) sizeof(_Params));
-
+	
+	_s->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
+	
 	_Save = _Params[0];
 	_AddressHigh = _Params[1];
 	_AddressLow = _Params[2];
@@ -564,10 +592,6 @@ bool EBYTE::ReadParameters() {
 
 bool EBYTE::ReadModelData() {
 
-	if (!_prog){
-		return false;
-	}
-
 	_Params[0] = 0;
 	_Params[1] = 0;
 	_Params[2] = 0;
@@ -579,8 +603,9 @@ bool EBYTE::ReadModelData() {
 	_s->write(0xC3);
 	_s->write(0xC3);
 
-	_s->readBytes((uint8_t*)& _Params, (uint16_t) sizeof(_Params));
-		
+	_s->readBytes((uint8_t*)& _Params, (uint8_t) sizeof(_Params));
+	delay(10);
+	_Save = _Params[0];	
 	_Model = _Params[1];
 	_Version = _Params[2];
 	_Features = _Params[3];

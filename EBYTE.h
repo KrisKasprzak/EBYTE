@@ -1,3 +1,4 @@
+ 
 /*
   The MIT License (MIT)
   Copyright (c) 2019 Kris Kasrpzak
@@ -30,7 +31,8 @@
   Revision		Data		Author			Description
   1.0			3/6/2019	Kasprzak		Initial creation
   2.0			3/2/2020	Kasprzak		Added all functions to build the options bit (FEC, Pullup, and TransmissionMode
-  
+  3.0			3/27/2020	Kasprzak		Added more Get functions
+
   Module connection
   Module	MCU						Description
   MO		Any digital pin*		pin to control working/program modes
@@ -63,6 +65,19 @@
 #else
 #include "WProgram.h"
 #endif
+
+/* 
+
+if modules don't seem to save, you will have to adjust this value
+when settin M0 an M1 there is gererally a short time for the transceiver modules
+to react, some say only 10 ms, but I've found it can be much lonnger, I'm using
+100 ms below and maybe too long, but it seemed to work in my cases
+
+*/
+#define PIN_RECOVER 100 
+
+
+
 
 // modes NORMAL send and recieve for example
 #define MODE_NORMAL 0			// can send and recieve
@@ -175,6 +190,8 @@ public:
 	void SetAddressL(uint8_t val = 0);
 	void SetAirDataRate(uint8_t val);
 	void SetUARTBaudRate(uint8_t val);
+	void SetSpeed(uint8_t val);
+	void SetOptions(uint8_t val);
 	void SetChannel(uint8_t val);
 	void Reset();
 	void SetParityBit(uint8_t val);
@@ -196,6 +213,23 @@ public:
 	uint8_t GetModel();
 	uint8_t GetVersion();
 	uint8_t GetFeatures();
+
+	uint8_t GetAddressH();
+	uint8_t GetAddressL();
+	uint8_t GetAirDataRate();
+	uint8_t GetUARTBaudRate();
+	uint8_t GetChannel();
+	uint8_t GetParityBit();
+	uint8_t GetTransmissionMode();
+	uint8_t GetPullupMode();
+	uint8_t GetWORTIming();
+	uint8_t GetFECMode();
+	uint8_t GetTransmitPower();
+
+
+	uint8_t GetOptions();
+	uint8_t GetSpeed();
+
 		
 	// methods to get data from sending unit
 	uint8_t GetByte();
@@ -227,9 +261,6 @@ protected:
 	// utility funciton to build the "options byte" which is a collection of a few different parameters
 	void BuildOptionByte();
 
-	// delay that does NOT lockup the MCU
-	void SmartDelay(unsigned long val = 20);
-
 	bool ReadModelData();
 
 
@@ -243,8 +274,7 @@ private:
 	int8_t _M0;
 	int8_t _M1;
 	int8_t _AUX;
-	uint8_t _prog;
-
+	
 	// variable for the 6 bytes that are sent to the module to program it
 	// or bytes received to indicate modules programmed settings
 	uint8_t _Params[6];
@@ -277,3 +307,4 @@ private:
 	unsigned long _rt;
 
 };
+
