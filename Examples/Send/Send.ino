@@ -10,8 +10,9 @@ if using and Arduino, you may need 4k7 pullups or inline resistors
 
 // include software serial libraries for Arduino
 // note the Teensy uses a #define to create the serial object
-#include <SoftwareSerial.h>
+// #include <SoftwareSerial.h> // need for Arduinos
 #include "EBYTE.h"
+#define ESerial Serial1     // use for Teensy pins for Serial1 Rx1=0, Tx1=1
 
 int Chan;
 
@@ -31,7 +32,7 @@ struct DATA {
 DATA MyData;
 
 // create a serial object for Arduino, again Teensy uses a much simpler #define scenario
-SoftwareSerial ESerial(2, 3);
+// SoftwareSerial ESerial(2, 3); // needed for Arduinos
 
 // Now you MUST create the transceiver object and you must pass in the serail object use the & to pass by reference
 // usage for teensy is the exact same
