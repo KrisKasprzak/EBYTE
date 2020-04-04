@@ -14,6 +14,10 @@ if using and Arduino, you may need 4k7 pullups or inline resistors
 #include "EBYTE.h"
 #define ESerial Serial1     // use for Teensy pins for Serial1 Rx1=0, Tx1=1
 
+#define M0_PIN 2
+#define M1_PIN 3
+#define AX_PIN 4
+
 int Chan;
 
 // this is a simple data structure used to send/receive data, edit to your needs
@@ -37,15 +41,10 @@ DATA MyData;
 // Now you MUST create the transceiver object and you must pass in the serail object use the & to pass by reference
 // usage for teensy is the exact same
 // M0, M1, and Aux pins are next
-EBYTE Transceiver(&ESerial, 4, 5, 6);
+EBYTE Transceiver(&ESerial, M0_PIN, M1_PIN, AX_PIN);
 
 void setup() {
 
-  // you should set the pin modes, MO, and M1 are to set the usage state of the EBYTE, aux is for reading states of the EBYTE
-  pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, INPUT);
-  
 // wanna see output on the serial monitor? need this line, make sure baud rates here and your serial monitor match
   Serial.begin(9600);
 
@@ -64,11 +63,12 @@ void setup() {
   // Transceiver.SetAirDataRate(ADR_8K); 	// change the air data rate
   // Transceiver.SetAddressH(0);		// set the high address byte
   // Transceiver.SetAddressL(0);		// set the low address byte
-  // Transceiver.SetChannel(2);			// set the channel (0-32 is pretty typical)
+  // Chan = 2;
+  // Transceiver.SetChannel(Chan);			// set the channel (0-32 is pretty typical)
   // Transceiver.SaveParameters(PERMANENT);	// save the parameters to the EBYTE EEPROM, you can save temp if periodic changes are needed
 
    // if you want to see the units settings, otherwise never need to call this
-   Transceiver.PrintParameters();
+   // Transceiver.PrintParameters();
 
 }
 
@@ -77,7 +77,7 @@ void loop() {
   // build your data structure with your data
   MyData.Count++;
   MyData.Bits = analogRead(A0);
-  MyData.Volts = MyData.Bits * ( 5.0 / 1024.0 );
+  MyData.Volts = MyData.Bits * ( 3.3 / 1024.0 );
 
   // one simple call to send the data structure, note the mandatory use of the & for reference passing
   Transceiver.SendStruct(&MyData, sizeof(MyData));
