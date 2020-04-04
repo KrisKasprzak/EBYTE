@@ -22,7 +22,7 @@ int Chan;
 
 // this is a simple data structure used to send/receive data, edit to your needs
 // you can send byte by byte and parse as needed, but that can be problematic
-// I highly recommend sending dat via a structure
+// I highly recommend sending your data via a structure
 
 struct DATA {
   unsigned long Count;
