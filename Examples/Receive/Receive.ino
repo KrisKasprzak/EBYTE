@@ -69,7 +69,7 @@ void setup() {
 // Transceiver.SaveParameters(PERMANENT);	// save the parameters to the EBYTE EEPROM, you can save temp if periodic changes are needed
 
 // if you want to see the units settings, otherwise never need to call this
-   Transceiver.PrintParameters();
+// Transceiver.PrintParameters();
 
 }
 
