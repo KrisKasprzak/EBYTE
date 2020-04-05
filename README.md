@@ -22,8 +22,8 @@ E32-915T20D, E32-915T20S, E32-915T30D, E32-915T30S, E32-170T30D, E32-400T20S,
   
 <b><h3> Module connection </b></h3>
 Module	MCU						Description
-1. MO		Any digital pin*		pin to control working/program modes (you can omit with -1, but no module programming support)
-2. M1		Any digital pin*		pin to control working/program modes (you can omit with -1, but no module programming support)
+1. MO		Any digital pin*		pin to control working/program modes 
+2. M1		Any digital pin*		pin to control working/program modes
 3. Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must receive data from module
 4. Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must receive data from module
 5. AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (you can omit with -1, but fixed recovery time used and may not be long enough)
@@ -31,8 +31,12 @@ Module	MCU						Description
 7. Vcc		Ground					Ground must be common to module and MCU		
 
 notes
-1. caution in connecting to Arduino pin 0 and 1 as those pins are for USB connection to PC, You may need a 4K7 pullup to Rx and AUX pins (possibly Tx) if using and Arduino, OR you may need a series 4K7 resistor between MCU Tx and the transceiver Rx.
-2. In some of my applications, I did not have enough digital pins to connect the Aux pin. No worries (just pass -1 in the argument list in the object create code). Then you will need to provide an appropriate delay() to let the transmission complete--experiment with the amount.
+
+1. caution in connecting to Arduino pin 0 and 1 as those pins are for USB connection to PC so you can't have the EBYTE connected during programming. I recommend NOT using Arduino pins 0 and 1
+2. The signal lines for these units are 3V3 but are 5 volt tolerant, however 5 volts may result in communication failures. If using a 5 volt MCU such as arduino, you may need to do the following. 
+  a) You may need a 4K7-10K pullup to Rx and AUX pins (possibly Tx) if using and Arduino
+  b) If using an Arduino you may need a series 4K7 resistor between MCU Tx and the transceiver Rx.
+4. In some of my applications, I did not have enough digital pins to connect the Aux pin. No worries (just pass -1 in the argument list in the object create code). Then you will need to provide an appropriate delay() to let the transmission complete--experiment with the amount.
 
 <b><h3>Manufacturers website</b></h3> 
 http://www.ebyte.com/en/
@@ -55,6 +59,8 @@ For best range:
 <li> Line of sight ideal, but my personal testing, transmission still successful with some obstructions</li>
 <li> Slow air data rates can improve range, but due to longer transmission time, how often data can be sent will be sacrificed</li>
 <li> Consider high gain antennas (can be purchased from the manufacturer) see their web site for details</li>
+<li> The data sheet says for max range, power the units with 5.0 volts (keep 3V3 on the signal lines). I personaly found little range differene with higher supply voltage</li>
+ <li> The data sheet says for max range, set the air data rate to 2.4 bps. I personaly found little range differene with low data rates, and low data rates may limit how often you can send data. </li>
 </ul>
 
 <b><h3>Data transmission packets</b></h3>
