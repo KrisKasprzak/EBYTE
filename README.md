@@ -26,8 +26,8 @@ Module	MCU						Description
 2. M1		Any digital pin*		pin to control working/program modes
 3. Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must receive data from module
 4. Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must receive data from module
-5. AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (you can omit with -1, but fixed recovery time used and may not be long enough)
-6. Vcc		+3v3 or 5V0				
+5. AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (you can omit with -1, but fixed recovery time used and may not be long enough to complete the operation)
+6. Vcc		+3v3 or 5V0, note the units may run warmer with 5V0 and consume more power				
 7. Vcc		Ground					Ground must be common to module and MCU		
 
 notes
