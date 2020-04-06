@@ -67,18 +67,18 @@ void setup() {
 
   // Serial.println(Transceiver.GetAirDataRate());
 
-   Transceiver.SetAddressH(4);
+  // Transceiver.SetAddressH(4);
   // Transceiver.SetAddressL(0);
   // Chan = 15;
   // Transceiver.SetChannel(Chan);
   // save the parameters to the unit,
-   Transceiver.SaveParameters(PERMANENT);
+  // Transceiver.SaveParameters(PERMANENT);
 
   // you can print all parameters and is good for debugging
   // if your units will not communicate, print the parameters
   // for both sender and receiver and make sure air rates, channel
   // and address is the same
-   Transceiver.PrintParameters();
+  // Transceiver.PrintParameters();
 
 }
 
