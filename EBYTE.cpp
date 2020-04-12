@@ -258,20 +258,14 @@ void EBYTE::SetMode(uint8_t mode) {
 
 
 /*
-ya get in a bind and can't remember the factory defaults, call this
-NOTE: EBYTE modules for 100mW, 500mW and 1W will have different defaults
-Per the data sheet just send 3x 0x4C to the unit
-you will need to chanage mainly the Air data rate and power options--see the .h file
-you would think we could look at _version and set defaults but version seems to not indicate the power
+
+Per the data sheet just send 3 x 0xC4 to reset the unit
+however this will not set the unit back to the factory settings
+
+...I have no clue what 0xC4 will do...
 */
 void EBYTE::Reset() {
 
-	// from the data sheet it is not clear what reset does
-	// data sheet says send 3 0xC4 writes and it will reset the unit
-	// I was hoping reset would reset the unit to the factory defaults
-	// but that is NOT the case, maybe reset just clears the buffers or something
-	// 
-	
 	SetMode(MODE_PROGRAM);
 
 	delay(1000);
