@@ -266,7 +266,11 @@ you would think we could look at _version and set defaults but version seems to 
 */
 void EBYTE::Reset() {
 
-	// debug later.. i've yet to get this process to work
+	// from the data sheet it is not clear what reset does
+	// data sheet says send 3 0xC4 writes and it will reset the unit
+	// I was hoping reset would reset the unit to the factory defaults
+	// but that is NOT the case, maybe reset just clears the buffers or something
+	// 
 	
 	SetMode(MODE_PROGRAM);
 
