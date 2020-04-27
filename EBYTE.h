@@ -305,6 +305,7 @@ private:
 	uint8_t _Features;
 	uint8_t _buf;
 	uint32_t _rt;
+	unsigned long test;
 
 };
 
