@@ -304,7 +304,7 @@ private:
 	uint8_t _Version;
 	uint8_t _Features;
 	uint8_t _buf;
-	unsigned long _rt;
+	uint32_t _rt;
 
 };
 
