@@ -74,5 +74,5 @@ For best range:
 <ul>
 <li> If you are using their 1W units, power the unit separately from the MCU's onboard power supply. The current draw may exceed the onboard rating resulting in destroying the MCU.</li>
 <li> If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
- <li> If you seem to get corrupt data from .PrintParameters, try addinng #include <avr/io.h> to your .INO program</li>
+ <li> If you seem to get corrupt data from .PrintParameters, try addinng #include "avr/io.h" to your .INO program</li>
 </ul>
