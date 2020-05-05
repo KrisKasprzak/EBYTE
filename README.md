@@ -61,6 +61,7 @@ For best range:
 <li> Consider high gain antennas (can be purchased from the manufacturer) see their web site for details</li>
 <li> The data sheet says for max range, power the units with 5.0 volts (keep 3V3 on the signal lines). I personaly found little range differene with higher supply voltage</li>
  <li> The data sheet says for max range, set the air data rate to 2.4 bps. I personaly found little range differene with low data rates, and low data rates may limit how often you can send data. </li>
+ 
 </ul>
 
 <b><h3>Data transmission packets</b></h3>
@@ -73,4 +74,5 @@ For best range:
 <ul>
 <li> If you are using their 1W units, power the unit separately from the MCU's onboard power supply. The current draw may exceed the onboard rating resulting in destroying the MCU.</li>
 <li> If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
+ <li> If you seem to get corrupt data from .PrintParameters, try addinng #include <avr/io.h> to your .INO program</li>
 </ul>
