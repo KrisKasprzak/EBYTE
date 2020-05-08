@@ -74,7 +74,9 @@ bool EBYTE::init() {
 
 	SetMode(MODE_NORMAL);
 	
-	_s->setTimeout(_rt);
+	// this may help with some MCU
+	// on others it may desrtroy the EBYTE settings
+	// _s->setTimeout(_rt);
 
 
 	// first get the module data (must be called first for some odd reason
