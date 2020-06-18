@@ -46,7 +46,7 @@
 create the transciever object
 */
 
-EBYTE::EBYTE(Stream *s, uint8_t PIN_M0, uint8_t PIN_M1, uint8_t PIN_AUX, unsigned long ReadTimeout )
+EBYTE::EBYTE(Stream *s, uint8_t PIN_M0, uint8_t PIN_M1, uint8_t PIN_AUX)
 
 {
 
@@ -54,7 +54,6 @@ EBYTE::EBYTE(Stream *s, uint8_t PIN_M0, uint8_t PIN_M1, uint8_t PIN_AUX, unsigne
 	_M0 = PIN_M0;
 	_M1 = PIN_M1;
 	_AUX = PIN_AUX;
-	_rt = ReadTimeout;
 
 		
 }
@@ -74,11 +73,6 @@ bool EBYTE::init() {
 
 	SetMode(MODE_NORMAL);
 	
-	// this may help with some MCU
-	// on others it may desrtroy the EBYTE settings
-	// _s->setTimeout(_rt);
-
-
 	// first get the module data (must be called first for some odd reason
 
 	ok = ReadModelData();
@@ -203,7 +197,6 @@ void EBYTE::CompleteTask(unsigned long timeout) {
 		while (digitalRead(_AUX) == LOW) {
 			
 			if ((millis() - t) > timeout){
-				
 				break;
 			}
 		}
@@ -218,7 +211,7 @@ void EBYTE::CompleteTask(unsigned long timeout) {
 
 	// per data sheet control after aux goes high is 2ms so delay for at least that long)
 	//SmartDelay(20);
-	delay(10);
+	delay(20);
 }
 
 /*
@@ -254,20 +247,22 @@ void EBYTE::SetMode(uint8_t mode) {
 	delay(PIN_RECOVER);
 	
 	// wait until aux pin goes back low
-	CompleteTask(4000);
+	// CompleteTask(4000);
 	
 }
 
 
 /*
-
-Per the data sheet just send 3 x 0xC4 to reset the unit
-however this will not set the unit back to the factory settings
-
-...I have no clue what 0xC4 will do...
+ya get in a bind and can't remember the factory defaults, call this
+NOTE: EBYTE modules for 100mW, 500mW and 1W will have different defaults
+Per the data sheet just send 3x 0x4C to the unit
+you will need to chanage mainly the Air data rate and power options--see the .h file
+you would think we could look at _version and set defaults but version seems to not indicate the power
 */
 void EBYTE::Reset() {
 
+	// debug later.. i've yet to get this process to work
+	
 	SetMode(MODE_PROGRAM);
 
 	delay(1000);
@@ -477,14 +472,42 @@ void EBYTE::SaveParameters(uint8_t val) {
 	SetMode(MODE_PROGRAM);
 	
 	// here you can save permanenly or temp
-	
+	delay(50);
+
+	/*
+	Serial.print("val: ");
+	Serial.println(val);
+
+	Serial.print("_AddressHigh: ");
+	Serial.println(_AddressHigh);
+
+	Serial.print("_AddressLow: ");
+	Serial.println(_AddressLow);
+
+	Serial.print("_Speed: ");
+	Serial.println(_Speed);
+
+	Serial.print("_Channel: ");
+	Serial.println(_Channel);
+
+	Serial.print("_Options: ");
+	Serial.println(_Options);
+	*/
+
+
 	_s->write(val);
+
 	_s->write(_AddressHigh);
+
 	_s->write(_AddressLow);
+
 	_s->write(_Speed);
+
 	_s->write(_Channel);
+
 	_s->write(_Options);
-	
+
+	delay(50);
 	CompleteTask(4000);
 	
 	SetMode(MODE_NORMAL);
@@ -554,12 +577,14 @@ bool EBYTE::ReadParameters() {
 
 	SetMode(MODE_PROGRAM);
 
+	// having all kinds of issues with timing on these modules
+	// read can corrupt the internal settings...
 	_s->write(0xC1);
 	_s->write(0xC1);
 	_s->write(0xC1);
-	
+	delay(50);
 	_s->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
-	
+	delay(50);
 	_Save = _Params[0];
 	_AddressHigh = _Params[1];
 	_AddressLow = _Params[2];
@@ -600,15 +625,32 @@ bool EBYTE::ReadModelData() {
 	SetMode(MODE_PROGRAM);
 
 	_s->write(0xC3);
-	_s->write(0xC3);
+
 	_s->write(0xC3);
 
+	_s->write(0xC3);
+	
+	delay(50);
+	while (_s->available()){
 	_s->readBytes((uint8_t*)& _Params, (uint8_t) sizeof(_Params));
-	delay(10);
+	}
+	
+	delay(50);
+	
 	_Save = _Params[0];	
 	_Model = _Params[1];
 	_Version = _Params[2];
 	_Features = _Params[3];
+/*
+	Serial.println("----");
+	Serial.println(_Params[0]);
+	Serial.println(_Params[1]);
+	Serial.println(_Params[2]);
+	Serial.println(_Params[3]);
+	Serial.println(_Params[4]);
+	Serial.println(_Params[5]);
+	Serial.println("----");
+	*/
 
 	SetMode(MODE_NORMAL);
 
