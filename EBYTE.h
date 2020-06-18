@@ -66,6 +66,10 @@
 #include "WProgram.h"
 #endif
 
+
+// if you seem to get "corrupt settings add this line to your .ino
+// #include <avr/io.h>
+
 /* 
 
 if modules don't seem to save, you will have to adjust this value
@@ -74,7 +78,7 @@ to react, some say only 10 ms, but I've found it can be much lonnger, I'm using
 100 ms below and maybe too long, but it seemed to work in my cases
 
 */
-#define PIN_RECOVER 100 
+#define PIN_RECOVER 20 
 
 
 
@@ -172,7 +176,7 @@ class EBYTE {
 
 public:
 
-	EBYTE(Stream *s, uint8_t PIN_M0 = 4, uint8_t PIN_M1 = 5, uint8_t PIN_AUX = 6, unsigned long ReadTimeout = 1000);
+	EBYTE(Stream *s, uint8_t PIN_M0 = 4, uint8_t PIN_M1 = 5, uint8_t PIN_AUX = 6);
 
 	// code to initialize the library
 	// this method reads all parameters from the module and stores them
@@ -246,15 +250,18 @@ public:
 	// notion here is you can set several but save once as opposed to saving on each parameter change
 	// you can save permanently (retained at start up, or temp which is ideal for dynamically changing the address or frequency
 	void SaveParameters(uint8_t val = PERMANENT);
-	
+
+
+
 protected:
 
-	// method to let method know of module is busy doing something (timeout provided to avoid lockups)
-	void CompleteTask(unsigned long timeout = 0);
 
 	// function to read modules parameters
 	bool ReadParameters();
 
+	// method to let method know of module is busy doing something (timeout provided to avoid lockups)
+	void CompleteTask(unsigned long timeout = 0);
+	
 	// utility funciton to build the "speed byte" which is a collection of a few different parameters
 	void BuildSpeedByte();
 
@@ -274,10 +281,10 @@ private:
 	int8_t _M0;
 	int8_t _M1;
 	int8_t _AUX;
-	
+
 	// variable for the 6 bytes that are sent to the module to program it
 	// or bytes received to indicate modules programmed settings
-	uint8_t _Params[6];
+	volatile uint8_t _Params[6];
 
 	// indicidual variables for each of the 6 bytes
 	// _Params could be used as the main variable storage, but since some bytes
@@ -289,6 +296,7 @@ private:
 	uint8_t _Speed;
 	uint8_t _Channel;
 	uint8_t _Options;
+
 	
 	// individual variables for all the options
 	uint8_t _ParityBit;
@@ -304,7 +312,6 @@ private:
 	uint8_t _Version;
 	uint8_t _Features;
 	uint8_t _buf;
-	uint32_t _rt;
 
 };
 
