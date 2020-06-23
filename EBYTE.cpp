@@ -73,6 +73,10 @@ bool EBYTE::init() {
 
 	SetMode(MODE_NORMAL);
 	
+	// Reset();
+
+	ClearBuffer();
+
 	// first get the module data (must be called first for some odd reason
 
 	ok = ReadModelData();
@@ -251,21 +255,16 @@ void EBYTE::SetMode(uint8_t mode) {
 	
 }
 
-
-/*
-ya get in a bind and can't remember the factory defaults, call this
-NOTE: EBYTE modules for 100mW, 500mW and 1W will have different defaults
-Per the data sheet just send 3x 0x4C to the unit
-you will need to chanage mainly the Air data rate and power options--see the .h file
-you would think we could look at _version and set defaults but version seems to not indicate the power
-*/
+// i have no clue what this is supposed to do
+// seems everytime I try using it, it sets all parameters to 0
+// i've asked EBYTE what's supposed to happen--got an unclear answer
+// hence this is a private function to keep users from crashing their modeules
 void EBYTE::Reset() {
 
-	// debug later.. i've yet to get this process to work
 	
 	SetMode(MODE_PROGRAM);
 
-	delay(1000);
+	delay(50);
 
 	_s->write(0xC4);
 	_s->write(0xC4);
@@ -274,10 +273,6 @@ void EBYTE::Reset() {
 	CompleteTask(4000);
 
 	SetMode(MODE_NORMAL);
-
-	ReadParameters();
-		
-
 
 }
 
@@ -518,12 +513,9 @@ void EBYTE::SaveParameters(uint8_t val) {
 /*
 method to print parameters, this can be called anytime after init(), because init gets parameters
 andy any method updates the variables
-however...to make darn sure what you see is real, we'll call ReadParameters once again
 */
 
 void EBYTE::PrintParameters() {
-
-	// ReadParameters();		
 
 	_ParityBit = (_Speed & 0XC0) >> 6;
 	_UARTDataRate = (_Speed & 0X38) >> 3;
@@ -577,14 +569,18 @@ bool EBYTE::ReadParameters() {
 
 	SetMode(MODE_PROGRAM);
 
-	// having all kinds of issues with timing on these modules
-	// read can corrupt the internal settings...
 	_s->write(0xC1);
+
 	_s->write(0xC1);
+
 	_s->write(0xC1);
-	delay(50);
+
+	delay(5);
+
 	_s->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
-	delay(50);
+
+	delay(5);
+
 	_Save = _Params[0];
 	_AddressHigh = _Params[1];
 	_AddressLow = _Params[2];
@@ -625,17 +621,14 @@ bool EBYTE::ReadModelData() {
 	SetMode(MODE_PROGRAM);
 
 	_s->write(0xC3);
-
+	_s->write(0xC3);
 	_s->write(0xC3);
 
-	_s->write(0xC3);
-	
-	delay(50);
-	while (_s->available()){
+	delay(5);
+
 	_s->readBytes((uint8_t*)& _Params, (uint8_t) sizeof(_Params));
-	}
 	
-	delay(50);
+	delay(5);
 	
 	_Save = _Params[0];	
 	_Model = _Params[1];
@@ -691,5 +684,14 @@ method to get module version (undocumented as to the value)
 uint8_t EBYTE::GetFeatures() {
 
 	return _Features;
+
+}
+void EBYTE::ClearBuffer(){
+
+	byte b;
+
+	while(_s->available()) {
+		b = _s->read();
+	}
 
 }
