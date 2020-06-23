@@ -197,7 +197,7 @@ public:
 	void SetSpeed(uint8_t val);
 	void SetOptions(uint8_t val);
 	void SetChannel(uint8_t val);
-	void Reset();
+	
 	void SetParityBit(uint8_t val);
 	
 	//functions to set the options
@@ -255,6 +255,8 @@ public:
 
 protected:
 
+	// i have no idea what reset does--added it for future figurig out
+	void Reset();
 
 	// function to read modules parameters
 	bool ReadParameters();
@@ -267,12 +269,11 @@ protected:
 
 	// utility funciton to build the "options byte" which is a collection of a few different parameters
 	void BuildOptionByte();
-
-	bool ReadModelData();
-
-
+	
 private:
 
+	bool ReadModelData();
+	void ClearBuffer();
 	// variable for the serial stream
 	Stream*  _s;
 	Stream*  _TD;
@@ -284,7 +285,7 @@ private:
 
 	// variable for the 6 bytes that are sent to the module to program it
 	// or bytes received to indicate modules programmed settings
-	volatile uint8_t _Params[6];
+	uint8_t _Params[6];
 
 	// indicidual variables for each of the 6 bytes
 	// _Params could be used as the main variable storage, but since some bytes
