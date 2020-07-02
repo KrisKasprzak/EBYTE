@@ -31,6 +31,7 @@
   1.0			3/6/2019	Kasprzak		Initial creation
   2.0			3/2/2020	Kasprzak		Added all functions to build the options bit (FEC, Pullup, and TransmissionMode
   3.0			3/27/2020	Kasprzak		Added more Get functions
+  4.0			6/23/2020	Kasprzak		Added private method to clear the buffer to ensure read methods would not be filled with buffered data
 */
 
 #include <EBYTE.h>
@@ -73,10 +74,6 @@ bool EBYTE::init() {
 
 	SetMode(MODE_NORMAL);
 	
-	// Reset();
-
-	ClearBuffer();
-
 	// first get the module data (must be called first for some odd reason
 
 	ok = ReadModelData();
@@ -466,8 +463,10 @@ void EBYTE::SaveParameters(uint8_t val) {
 	
 	SetMode(MODE_PROGRAM);
 	
+	ClearBuffer();
+
 	// here you can save permanenly or temp
-	delay(50);
+	delay(5);
 
 	/*
 	Serial.print("val: ");
@@ -512,7 +511,7 @@ void EBYTE::SaveParameters(uint8_t val) {
 
 /*
 method to print parameters, this can be called anytime after init(), because init gets parameters
-andy any method updates the variables
+and any method updates the variables
 */
 
 void EBYTE::PrintParameters() {
@@ -559,7 +558,6 @@ method to read parameters,
 
 bool EBYTE::ReadParameters() {
 
-	// read basic parameters
 	_Params[0] = 0;
 	_Params[1] = 0;
 	_Params[2] = 0;
@@ -568,6 +566,9 @@ bool EBYTE::ReadParameters() {
 	_Params[5] = 0;
 
 	SetMode(MODE_PROGRAM);
+
+	ClearBuffer();
+	delay(5);
 
 	_s->write(0xC1);
 
@@ -619,6 +620,9 @@ bool EBYTE::ReadModelData() {
 	_Params[3] = 0;
 
 	SetMode(MODE_PROGRAM);
+
+
+	ClearBuffer();
 
 	_s->write(0xC3);
 	_s->write(0xC3);
