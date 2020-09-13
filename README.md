@@ -16,7 +16,9 @@ E30-TTL-100,E30-490T20D, E31-TTL-100, E32-TTL-100, E32-TTL-500, E32-TTL-1W, E41-
 
 New model number scheme 
 E22-900T22S, E22-230T22S, E22-400T22S, E22-230T30S, E22-400T30S, E22-900T30S, E30-433T20S3, E30-170T20D, E30-170T27D, E30-780T20S, E30-868T20S, E30-868T20D, E30-915T20D, E30-490T20D, E30-433T20S, E30-433T20D, E30-915T20S, E30-490T20S, E31-433T30S, E31-433T17S3, E31-230T33D, E31-230T17D, E31-230T27D, E31-433T17S, E31-433T17D, E31-433T27D, E31-433T30D, E31-433T33D, E32-433T20DC, E32-433T20S, E32-433T20S2T, E32-433T27D, E32-433T30D, E32-433T30S, E32-868T20D, E32-868T20S, E32-868T30D, E32-868T30S,
-E32-915T20D, E32-915T20S, E32-915T30D, E32-915T30S, E32-170T30D, E32-400T20S, 
+E32-915T20D, E32-915T20S, E32-915T30D, E32-915T30S, E32-170T30D, E32-400T20S
+
+Note: check the EBYTE website to make sure the selected module supports UART communications, some modules are SPI only.
 
 Here is a YouTube video on library usage: https://youtu.be/hMjArKGucFA
   
@@ -24,8 +26,8 @@ Here is a YouTube video on library usage: https://youtu.be/hMjArKGucFA
 Module	MCU						Description
 1. MO		Any digital pin*		pin to control working/program modes 
 2. M1		Any digital pin*		pin to control working/program modes
-3. Rx		Any digital pin			pin to MCU TX pin (module transmits to MCU, hence MCU must receive data from module
-4. Tx		Any digital pin			pin to MCU RX pin (module transmits to MCU, hence MCU must receive data from module
+3. Rx		Any digital pin*			pin to MCU TX pin (module transmits to MCU, hence MCU must receive data from module
+4. Tx		Any digital pin*			pin to MCU RX pin (module transmits to MCU, hence MCU must receive data from module
 5. AUX		Any digital pin			pin to indicate when an operation is complete (low is busy, high is done) (you can omit with -1, but fixed recovery time used and may not be long enough to complete the operation)
 6. Vcc		+3v3 or 5V0, note the units may run warmer with 5V0 and consume more power				
 7. Vcc		Ground					Ground must be common to module and MCU		
@@ -37,6 +39,7 @@ notes
   a) You may need a 4K7-10K pullup to Rx and AUX pins (possibly Tx) if using and Arduino
   b) If using an Arduino you may need a series 4K7 resistor between MCU Tx and the transceiver Rx.
 4. In some of my applications, I did not have enough digital pins to connect the Aux pin. No worries (just pass -1 in the argument list in the object create code). Then you will need to provide an appropriate delay() to let the transmission complete--experiment with the amount.
+5. Serial pins for connection is dependent on the MCU, Teensy 3.2 for example: Serial1 are Rx=0, Rx=0, Serial2 Rx=9, Tx=10, Serial3 Rx=7, Tx=8. Arduino can be most serial pins using SoftwareSerial(MCU_Rx_pin, MCU_Tx_pin), except pins 0 and 1 as those are for USB usage
 
 <b><h3>Manufacturers website</b></h3> 
 http://www.ebyte.com/en/
