@@ -692,10 +692,8 @@ uint8_t EBYTE::GetFeatures() {
 }
 void EBYTE::ClearBuffer(){
 
-	byte b;
-
 	while(_s->available()) {
-		b = _s->read();
+		_s->read();
 	}
 
 }
