@@ -1,5 +1,8 @@
 # EBYTE
  
+ 
+<b><h2><center>Updated 12/4/2020, added internal buffer clearing to avoid programming and read corruption</center></h1></b>
+<br>
 <b><h2><center>EBYTE Transceivers</center></h1></b>
 
 This library is intended to be used with UART type EBYTE transceivers (E44-TTL-100 for example), small wireless units for MCU's such as
