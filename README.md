@@ -5,13 +5,12 @@
 <br>
 <b><h2><center>EBYTE Transceivers</center></h1></b>
 
-<h3 style="color:#ff0000">
 This library is intended to be used with UART type EBYTE transceivers (E44-TTL-100 for example), small wireless units for MCU's such as
 Teensy and Arduino. This library lets users program the operating parameters and both send and receive data.
 This company makes several modules with different capabilities, but most #defines here should be compatible with them
 All constants were extracted from several data sheets and listed in binary as that's how the data sheet represented each setting.
 Hopefully, any changes or additions to constants can be a matter of copying the data sheet constants directly into the #defines. 
-Usage of this library consumes around 970 bytes. </h3>
+Usage of this library consumes around 970 bytes. 
 
 You only really need this library to program these EBYTE units. 
 For reading data structures, you can call readBytes directly on the EBYTE Serial object
@@ -90,7 +89,7 @@ For best range:
 </ul>
 <b><h3>Debugging</b></h3>
 <ul>
- <li> <b><font color="red">If your units are not working (printing all 0's for the PrintParameters() method, make sure your wiring is correct and working, MCU Rx needs to connecte to the EBYTE Tx and vice versa. Also make sure M0, M0, and AUX are connected to valid digital ports. Most issues are due to incorrect data line connections </b></font></li>
+ <li> <b>If your units are not working (printing all 0's for the PrintParameters() method, make sure your wiring is correct and working, MCU Rx needs to connecte to the EBYTE Tx and vice versa. Also make sure M0, M0, and AUX are connected to valid digital ports. Most issues are due to incorrect data line connections </b></li>
 <li> If you are using their 1W units, power the unit separately from the MCU's onboard power supply. The current draw may exceed the onboard rating resulting in destroying the MCU. I have destroyed the onboard voltage regulator on a NANO when trying to power a 1W unit.</li>
 <li> If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
  <li> If you seem to get corrupt data from .PrintParameters, try addinng #include "avr/io.h" to your .INO program</li>
