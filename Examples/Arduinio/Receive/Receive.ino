@@ -95,7 +95,10 @@ void loop() {
     // a parsing method
 
     Transceiver.GetStruct(&MyData, sizeof(MyData));
-
+  // You only really need this library to program these EBYTE units. 
+  // For reading data structures, you can call readBytes directly on the EBYTE Serial object
+  // ESerial.readBytes((uint8_t*)& MyData, (uint8_t) sizeof(MyData));
+  
     // dump out what was just received
     Serial.print("Count: "); Serial.println(MyData.Count);
     Serial.print("Bits: "); Serial.println(MyData.Bits);
