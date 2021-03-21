@@ -5,6 +5,8 @@
 <br>
 <b><h2><center>EBYTE Transceivers</center></h1></b>
 
+<span style="color: red">I am red</span>
+
 This library is intended to be used with UART type EBYTE transceivers (E44-TTL-100 for example), small wireless units for MCU's such as
 Teensy and Arduino. This library lets users program the operating parameters and both send and receive data.
 This company makes several modules with different capabilities, but most #defines here should be compatible with them
