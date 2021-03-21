@@ -1,7 +1,7 @@
 # EBYTE
  
  
-<b><h2><center>Updated 3/20/2021, added ESP8266 examples</center></h1></b>
+<b><h2><center>Updated 3/20/2021, added ESP8266 and ESP32 examples</center></h1></b>
 <br>
 <b><h2><center>EBYTE Transceivers</center></h1></b>
 
