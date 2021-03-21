@@ -7,11 +7,11 @@
 
 
   connections
-  Module      Teensy
+  Module      Arduino
   M0          4
   M1          5
-  Rx          2 (MCU Tx line)
-  Tx          3 (MCU Rx line)
+  Rx          2 (This is the MCU Tx lined)
+  Tx          3 (This is the MCU Rx line)
   Aux         6
   Vcc         3V3
   Gnd         Gnd
@@ -77,7 +77,7 @@ void setup() {
   // if your units will not communicate, print the parameters
   // for both sender and receiver and make sure air rates, channel
   // and address is the same
-  // Transceiver.PrintParameters();
+  Transceiver.PrintParameters();
 
 
 }
