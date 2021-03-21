@@ -20,9 +20,9 @@ YOU MUST USE THE ACTUAL GPIO NUMBER
 #define PIN_RX 14   //D5 on the board (Connect this to the EBYTE TX pin)
 #define PIN_TX 12   //D6 on the board (connect this to the EBYTE RX pin)
 
-#define PIN_M0 5    //D1 on the board
-#define PIN_M1 4    //D2 on the board
-#define PIN_AX 16   //D0 on the board
+#define PIN_M0 5    //D1 on the board (connect this to the EBYTE M0 pin)
+#define PIN_M1 4    //D2 on the board (connect this to the EBYTE M1 pin)
+#define PIN_AX 16   //D0 on the board (connect this to the EBYTE AUX pin)
 
 // i recommend putting this code in a .h file and including it
 // from both the receiver and sender modules
