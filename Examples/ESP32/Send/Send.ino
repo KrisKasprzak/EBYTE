@@ -10,19 +10,6 @@
 
   This code for for the sender
 
-
-  connections
-  Module      ESP6266
-  M0          GPIO14 (pin D5)
-  M1          GPIO5  (pin D6)
-  Rx          GPIO2  (pin D1)
-  Tx          GPIO3  (Pin D2)
-  Aux         GPIO6  (pin D0)
-  Vcc         3V3
-  Gnd         Gnd
-
-
-
   ESP32 won't allow SoftwareSerial (at least I can't get that lib to work
   so you will just hardwire your EBYTE directly to the Serial2 port
 
@@ -37,8 +24,8 @@ WARNING: IF USING AN ESP32
 DO NOT USE THE PIN NUMBERS PRINTED ON THE BOARD
 YOU MUST USE THE ACTUAL GPIO NUMBER
 */
-#define PIN_RX 16   // Serial2 RX
-#define PIN_TX 17   // Serial2 TX pin
+#define PIN_RX 16   // Serial2 RX (connect this to the EBYTE Tx pin)
+#define PIN_TX 17   // Serial2 TX pin (connect this to the EBYTE Rx pin)
 
 #define PIN_M0 4    // D4 on the board (possibly pin 24)
 #define PIN_M1 22   // D2 on the board (possibly called pin 22)
