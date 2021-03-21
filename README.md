@@ -9,7 +9,8 @@ This library is intended to be used with UART type EBYTE transceivers (E44-TTL-1
 Teensy and Arduino. This library lets users program the operating parameters and both send and receive data.
 This company makes several modules with different capabilities, but most #defines here should be compatible with them
 All constants were extracted from several data sheets and listed in binary as that's how the data sheet represented each setting.
-Hopefully, any changes or additions to constants can be a matter of copying the data sheet constants directly into the #defines
+Hopefully, any changes or additions to constants can be a matter of copying the data sheet constants directly into the #defines. 
+Usage of this library consumes around 970 bytes
 
 You only really need this library to program these EBYTE units. 
 For reading data structures, you can call readBytes directly on the EBYTE Serial object
@@ -20,7 +21,7 @@ for writing data structures you can call write directly on the EBYTE Serial obje
 
 ESerial.write((uint8_t*) &Data, PacketSize );
 
-Usage of this library consumes around 970 bytes
+
 
 <b> EBYTE Model numbers (only a partial list shown)</b>
 Old model number scheme 
