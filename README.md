@@ -53,6 +53,7 @@ notes
   b) If using an Arduino you may need a series 4K7 resistor between MCU Tx and the transceiver Rx.
 4. In some of my applications, I did not have enough digital pins to connect the Aux pin. No worries (just pass -1 in the argument list in the object create code). Then you will need to provide an appropriate delay() to let the transmission complete--experiment with the amount.
 5. Serial pins for connection is dependent on the MCU, Teensy 3.2 for example: Serial1 are Rx=0, Rx=0, Serial2 Rx=9, Tx=10, Serial3 Rx=7, Tx=8. Arduino can be most serial pins using SoftwareSerial(MCU_Rx_pin, MCU_Tx_pin), except pins 0 and 1 as those are for USB usage
+6. Some MCU such as the Teensy, and ESP32 do NOT allow the use of SoftwareSerial to create a communications port. No worries, just hard wire the EBTYE to a dedicated UART port (pin 0 and pin 1 on a teensy 3.2 for Serial1.
 
 <b><h3>Manufacturers website</b></h3> 
 http://www.ebyte.com/en/
@@ -92,5 +93,5 @@ For best range:
 <li> If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
  <li> If you seem to get corrupt data from .PrintParameters, try addinng #include "avr/io.h" to your .INO program</li>
  <li> If using a 5v0 MCU you may need series resistors on the MCU Tx line to the EBYTE Rx line and possibly the M0 and M1 lines. These EBYTE units are supposed to be 5 volt tolerant, but better safe than sorry. Also MFG claims 4K7 pullups can be needed on MCU Tx line and AUX. I have used these transceivers on UNO's, MEGA's, and NANO's w/o any resistors and all was well. I did have one case where a NANO did not work with these transceivers and required some odd powering.</li>
- <li> If your units are not working, make sure your wiring is correct and working, Rx<->Tx and vice versa, etc. Most issues are due to incorrect data line connections</li>
+ <li> <b>If your units are not working, make sure your wiring is correct and working, Rx<->Tx and vice versa, etc. Most issues are due to incorrect data line connections </b></li>
 </ul>
