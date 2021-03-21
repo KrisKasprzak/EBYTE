@@ -7,11 +7,11 @@
 
 
   connections
-  Module      Teensy
+  Module      Arduino
   M0          4
   M1          5
-  Rx          2 (MCU Tx line)
-  Tx          3 (MCU Rx line)
+  Rx          2 (This is the MCU Tx lined)
+  Tx          3 (This is the MCU Rx line)
   Aux         6
   Vcc         3V3
   Gnd         Gnd
@@ -78,7 +78,7 @@ void setup() {
   // if your units will not communicate, print the parameters
   // for both sender and receiver and make sure air rates, channel
   // and address is the same
-  // Transceiver.PrintParameters();
+  Transceiver.PrintParameters();
 
 }
 
@@ -93,6 +93,11 @@ void loop() {
   // a parsed data--i've always had a hard time getting reliable data using
   // a parsing method
   Transceiver.SendStruct(&MyData, sizeof(MyData));
+  
+  // You only really need this library to program these EBYTE units. 
+  // for writing data structures you can call write directly on the EBYTE Serial object
+  // ESerial.write((uint8_t*) &Data, PacketSize );
+  
 
   // let the use know something was sent
   Serial.print("Sending: "); Serial.println(MyData.Count);
