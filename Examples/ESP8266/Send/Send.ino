@@ -6,16 +6,6 @@
   This code for for the sender
 
 
-  connections
-  Module      ESP6266
-  M0          GPIO14 (pin D5)
-  M1          GPIO5  (pin D6)
-  Rx          GPIO2  (pin D1)
-  Tx          GPIO3  (Pin D2)
-  Aux         GPIO6  (pin D0)
-  Vcc         3V3
-  Gnd         Gnd
-
 */
 
 #include <SoftwareSerial.h>
@@ -27,8 +17,8 @@ DO NOT USE THE PIN NUMBERS PRINTED ON THE BOARD
 YOU MUST USE THE ACTUAL GPIO NUMBER
 */
 
-#define PIN_RX 14   //D5 on the board
-#define PIN_TX 12   //D6 on the board
+#define PIN_RX 14   //D5 on the board (Connect this to the EBYTE TX pin)
+#define PIN_TX 12   //D6 on the board (connect this to the EBYTE RX pin)
 
 #define PIN_M0 5    //D1 on the board
 #define PIN_M1 4    //D2 on the board
