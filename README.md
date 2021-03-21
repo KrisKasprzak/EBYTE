@@ -5,13 +5,13 @@
 <br>
 <b><h2><center>EBYTE Transceivers</center></h1></b>
 
-<font color=`#ffffff`>
+<h3 style="color:#ff0000">
 This library is intended to be used with UART type EBYTE transceivers (E44-TTL-100 for example), small wireless units for MCU's such as
 Teensy and Arduino. This library lets users program the operating parameters and both send and receive data.
 This company makes several modules with different capabilities, but most #defines here should be compatible with them
 All constants were extracted from several data sheets and listed in binary as that's how the data sheet represented each setting.
 Hopefully, any changes or additions to constants can be a matter of copying the data sheet constants directly into the #defines. 
-Usage of this library consumes around 970 bytes. </font>
+Usage of this library consumes around 970 bytes. </h3>
 
 You only really need this library to program these EBYTE units. 
 For reading data structures, you can call readBytes directly on the EBYTE Serial object
