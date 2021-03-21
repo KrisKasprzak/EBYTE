@@ -89,9 +89,10 @@ For best range:
 </ul>
 <b><h3>Debugging</b></h3>
 <ul>
+ <li> <b>If your units are not working (printing all 0's for the PrintParameters() method, make sure your wiring is correct and working, MCU Rx needs to connecte to the EBYTE Tx and vice versa. Also make sure M0, M0, and AUX are connected to valid digital ports. Most issues are due to incorrect data line connections </b></li>
 <li> If you are using their 1W units, power the unit separately from the MCU's onboard power supply. The current draw may exceed the onboard rating resulting in destroying the MCU. I have destroyed the onboard voltage regulator on a NANO when trying to power a 1W unit.</li>
 <li> If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
  <li> If you seem to get corrupt data from .PrintParameters, try addinng #include "avr/io.h" to your .INO program</li>
  <li> If using a 5v0 MCU you may need series resistors on the MCU Tx line to the EBYTE Rx line and possibly the M0 and M1 lines. These EBYTE units are supposed to be 5 volt tolerant, but better safe than sorry. Also MFG claims 4K7 pullups can be needed on MCU Tx line and AUX. I have used these transceivers on UNO's, MEGA's, and NANO's w/o any resistors and all was well. I did have one case where a NANO did not work with these transceivers and required some odd powering.</li>
- <li> <b>If your units are not working, make sure your wiring is correct and working, Rx<->Tx and vice versa, etc. Most issues are due to incorrect data line connections </b></li>
+ 
 </ul>
