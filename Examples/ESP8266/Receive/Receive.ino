@@ -50,8 +50,6 @@ int Chan;
 DATA MyData;
 unsigned long Last;
 
-// connect to any digital pin to connect to the serial port
-// don't use pin 01 and 1 as they are reserved for USB communications
 SoftwareSerial ESerial(PIN_RX, PIN_TX);
 
 // create the transceiver object, passing in the serial and pins
