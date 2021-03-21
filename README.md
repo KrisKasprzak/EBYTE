@@ -13,10 +13,10 @@ Hopefully, any changes or additions to constants can be a matter of copying the 
 
 You only really need this library to program these EBYTE units. 
 For reading data structures, you can call readBytes directly on the EBYTE Serial object
-ESerial.readBytes((uint8_t*)& MyData, (uint8_t) sizeof(MyData));
+<b>ESerial.readBytes((uint8_t*)& MyData, (uint8_t) sizeof(MyData));</b>
 
 for writing data structures you can call write directly on the EBYTE Serial object
-ESerial.write((uint8_t*) &Data, PacketSize );
+<b>ESerial.write((uint8_t*) &Data, PacketSize );</b>
 
 Usage of this library consumes around 970 bytes
 
