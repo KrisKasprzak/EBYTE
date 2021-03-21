@@ -10,8 +10,8 @@
   Module      Teensy
   M0          2
   M1          3
-  Rx          1 (MCU Tx line)
-  Tx          0 (MCU Rx line)
+  Rx          1 (This is the MCU Tx pin)
+  Tx          0 (This is the MCU Rx pin)
   Aux         4
   Vcc         3V3
   Gnd         Gnd
@@ -77,7 +77,7 @@ void setup() {
   // if your units will not communicate, print the parameters
   // for both sender and receiver and make sure air rates, channel
   // and address is the same
-  // Transceiver.PrintParameters();
+  Transceiver.PrintParameters();
 
 }
 
@@ -86,13 +86,18 @@ void loop() {
   // measure some data and save to the structure
   MyData.Count++;
   MyData.Bits = analogRead(A0);
-  MyData.Volts = MyData.Bits * ( 5.0 / 1024.0 );
+  MyData.Volts = MyData.Bits * ( 3.3 / 1024.0 );
 
   // i highly suggest you send data using structures and not
   // a parsed data--i've always had a hard time getting reliable data using
   // a parsing method
   Transceiver.SendStruct(&MyData, sizeof(MyData));
 
+  
+  // You only really need this library to program these EBYTE units. 
+  // for writing data structures you can call write directly on the EBYTE Serial object
+  // ESerial.write((uint8_t*) &Data, PacketSize );
+  
   // let the use know something was sent
   Serial.print("Sending: "); Serial.println(MyData.Count);
 
