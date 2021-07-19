@@ -74,13 +74,15 @@
 
 /* 
 
-if modules don't seem to save, you will have to adjust this value
+if modules don't seem to save or read parameters, it's probably due to slow pin changing times
+in the module. I see this happen rarely. You will have to adjust this value
 when settin M0 an M1 there is gererally a short time for the transceiver modules
-to react, some say only 10 ms, but I've found it can be much lonnger, I'm using
-100 ms below and maybe too long, but it seemed to work in my cases
-
+to react. The data sheet says 2 ms, but more time is generally needed. I'm using
+50 ms below and maybe too long, but it seems to work in most cases. Increase this value
+if your unit will not return parameter settings.
 */
-#define PIN_RECOVER 15 
+
+#define PIN_RECOVER 50 
 
 
 
