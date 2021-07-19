@@ -212,8 +212,9 @@ void EBYTE::CompleteTask(unsigned long timeout) {
 
 
 	// per data sheet control after aux goes high is 2ms so delay for at least that long)
-	//SmartDelay(20);
-	delay(20);
+	// some MCU are slow so give 50 ms
+	
+	delay(PIN_RECOVER);
 }
 
 /*
@@ -285,8 +286,6 @@ void EBYTE::Reset() {
 
 	
 	SetMode(MODE_PROGRAM);
-
-	delay(50); // not sure you need this
 
 	_s->write(0xC4);
 	_s->write(0xC4);
@@ -495,9 +494,6 @@ void EBYTE::SaveParameters(uint8_t val) {
 	
 	// ClearBuffer();
 
-	// here you can save permanenly or temp
-	delay(5);
-
 	/*
 	Serial.print("val: ");
 	Serial.println(val);
@@ -526,7 +522,7 @@ void EBYTE::SaveParameters(uint8_t val) {
 	_s->write(_Channel);
 	_s->write(_Options);
 
-	delay(50);
+	delay(PIN_RECOVER);
 
 	CompleteTask(4000);
 	
