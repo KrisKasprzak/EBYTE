@@ -18,13 +18,15 @@ Usage of this library consumes around 970 bytes.
 You only really need this library to program these EBYTE units. 
 For reading data structures, you can call readBytes directly on the EBYTE Serial object
 
+```
 ESerial.readBytes((uint8_t*)& MyData, (uint8_t) sizeof(MyData));
+```
 
 for writing data structures you can call write directly on the EBYTE Serial object
 
+```
 ESerial.write((uint8_t*) &Data, PacketSize );
-
-
+```
 
 <b> EBYTE Model numbers (only a partial list shown)</b>
 Old model number scheme 
@@ -75,12 +77,12 @@ http://www.ebyte.com/en/product-view-news.aspx?id=174
 
 For best range:
 <ul>
-<li> Data sheet indicates best results are with antennas 2meters off of ground</li>
+<li> Data sheet indicates best results are with antennas 2 meters from the ground</li>
 <li> Line of sight ideal, but my personal testing, transmission still successful with some obstructions</li>
 <li> Slow air data rates can improve range, but due to longer transmission time, how often data can be sent will be sacrificed</li>
 <li> Consider high gain antennas (can be purchased from the manufacturer) see their web site for details</li>
-<li> The data sheet says for max range, power the units with 5.0 volts (keep 3V3 on the signal lines). I personaly found little range differene with higher supply voltage</li>
- <li> The data sheet says for max range, set the air data rate to 2.4 bps. I personaly found little range differene with low data rates, and low data rates may limit how often you can send data. </li>
+<li> The data sheet says for max range, power the units with 5.0 volts (keep 3V3 on the signal lines). I personaly found little range difference with higher supply voltage</li>
+<li> The data sheet says for max range, set the air data rate to 2.4 bps. I personaly found little range difference with low data rates, and low data rates may limit how often you can send data. </li>
  
 </ul>
 
@@ -92,7 +94,7 @@ For best range:
 </ul>
 <b><h3>Debugging</b></h3>
 <ul>
- <li> <b>If your wireless module is returning all 0's for the PrintParameters() method, make sure your wiring is correct and working, MCU Rx needs to connecte to the EBYTE Tx and vice versa. Also make sure M0, M0, and AUX are connected to valid digital ports. Most issues are due to incorrect data line connections </b></li>
+ <li> <b>If your wireless module is returning all 0's for the PrintParameters() method, make sure your wiring is correct and working, MCU Rx needs to connecte to the EBYTE Tx and vice versa. Also make sure M0, M1, and AUX are connected to valid digital ports. Most issues are due to incorrect data line connections </b></li>
   <li> <b>If your wireless module is returning all 0's for the PrintParameters() method, AND you are sure your wiring is correct, your module may be slow to react to pinMode change performed during a mode change. The datasheet says delay of 2 ms is needed, but I've found 10 ms is more reliable. With some units, even more time is needed. The library default is 50 ms, but increase this in the .h file if parameters are not correctly read.</b></li>
 <li> If you are using their 1W units, power the unit separately from the MCU's onboard power supply. The current draw may exceed the onboard rating resulting in destroying the MCU. I have destroyed the onboard voltage regulator on a NANO when trying to power a 1W unit.</li>
 <li> If transmitter and receiver are different MCU (Arduino <-> Teensy), data structures cannot have a mix of data types, due to how an 8-bit processor and 32-bit processor handle ints, floats, etc. If floats and ints are needed to be sent considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
