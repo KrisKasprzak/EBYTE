@@ -34,6 +34,8 @@
   3.0			3/27/2020	Kasprzak		Added more Get functions
   4.0			6/23/2020	Kasprzak		Added private method to clear the buffer to ensure read methods would not be filled with buffered data
   5.0			12/4/2020	Kasprzak		moved Reset to public, added Clear to SetMode to avoid buffer corruption during programming
+  5.5			1/26/2022	Kasprzak		added attempt parameter to limit the retries
+
 
   Module connection
   Module	MCU						Description
@@ -189,7 +191,7 @@ public:
 	// ALL parameters must be sent even if only one option is changed--hence get all parameters initially
 	// so you know what the non changed parameters are know for resending back
 
-	bool init();
+	bool init(uint8_t _Attempts = 5);
 	
 	// methods to set modules working parameters NOTHING WILL BE SAVED UNLESS SaveParameters() is called
 	void SetMode(uint8_t mode = MODE_NORMAL);
@@ -303,7 +305,7 @@ private:
 	uint8_t _Speed;
 	uint8_t _Channel;
 	uint8_t _Options;
-
+	uint8_t _Attempts;
 	
 	// individual variables for all the options
 	uint8_t _ParityBit;
