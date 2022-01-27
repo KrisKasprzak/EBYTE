@@ -33,6 +33,8 @@
   3.0			3/27/2020	Kasprzak		Added more Get functions
   4.0			6/23/2020	Kasprzak		Added private method to clear the buffer to ensure read methods would not be filled with buffered data
   5.0			12/4/2020	Kasprzak		moved Reset to public, added Clear to SetMode to avoid buffer corruption during programming
+  5.5			1/26/2022	Kasprzak		implemented attempt parameter and adjusted the pinmode delays--in an attempt to make NANO's connect more successful
+  
 */
 
 #include <EBYTE.h>
@@ -65,7 +67,7 @@ Initialize the unit--basicall this reads the modules parameters and stores the p
 for potential future module programming
 */
 
-bool EBYTE::init() {
+bool EBYTE::init(uint8_t _Attempts) {
 
 	bool ok = true;
 	
@@ -73,6 +75,15 @@ bool EBYTE::init() {
 	pinMode(_M0, OUTPUT);
 	pinMode(_M1, OUTPUT);
 
+	delay(10);
+	
+	if (_Attempts < 1){
+		_Attempts = 1;
+	}
+	if (_Attempts > 10){
+		_Attempts = 10;
+	}
+	
 	SetMode(MODE_NORMAL);
 
 	// first get the module data (must be called first for some odd reason
@@ -194,10 +205,14 @@ void EBYTE::CompleteTask(unsigned long timeout) {
 
 	// if AUX pin was supplied and look for HIGH state
 	// note you can omit using AUX if no pins are available, but you will have to use delay() to let module finish
+	
+	// per data sheet control after aux goes high is 2ms so delay for at least that long
+	// some MCU are slow so give 50 ms
+	
 	if (_AUX != -1) {
 		
 		while (digitalRead(_AUX) == LOW) {
-			
+			delay(PIN_RECOVER);
 			if ((millis() - t) > timeout){
 				break;
 			}
@@ -210,11 +225,7 @@ void EBYTE::CompleteTask(unsigned long timeout) {
 
 	}
 
-
-	// per data sheet control after aux goes high is 2ms so delay for at least that long)
-	// some MCU are slow so give 50 ms
-	
-	delay(PIN_RECOVER);
+	// delay(PIN_RECOVER);
 }
 
 /*
@@ -640,13 +651,10 @@ bool EBYTE::ReadModelData() {
 	int i = 0;
 	
 	SetMode(MODE_PROGRAM);
-
+	
 	_s->write(0xC3);
-
 	_s->write(0xC3);
-
 	_s->write(0xC3);
-
 	_s->readBytes((uint8_t*)& _Params, (uint8_t) sizeof(_Params));
 	
 	_Save = _Params[0];	
@@ -656,29 +664,39 @@ bool EBYTE::ReadModelData() {
 
 	if (0xC3 != _Params[0]) {
 
+		// i'm not terribly sure this is the best way to retry
+		// may need to set the mode back to normal first....
 		for (i = 0; i < 5; i++){
-			Serial.print("trying: "); Serial.println(i);
+			// Serial.print("trying: "); Serial.println(i);
 			_Params[0] = 0;
 			_Params[1] = 0;
 			_Params[2] = 0;
 			_Params[3] = 0;
 			_Params[4] = 0;
 			_Params[5] = 0;
-			delay(100);
 
 			_s->write(0xC3);
-
 			_s->write(0xC3);
-
 			_s->write(0xC3);
-
+			
 			_s->readBytes((uint8_t*)& _Params, (uint8_t) sizeof(_Params));
-
+			
+			/*
+			Serial.print("_Attempts ");Serial.println(_Attempts);
+			Serial.print("_Params[0] ");Serial.println(_Params[0]);
+			Serial.print("_Params[1] ");Serial.println(_Params[1]);
+			Serial.print("_Params[2] ");Serial.println(_Params[2]);
+			Serial.print("_Params[3] ");Serial.println(_Params[3]);
+			Serial.print("_Params[4] ");Serial.println(_Params[4]);
+			Serial.print("_Params[5] ");Serial.println(_Params[5]);
+			*/
+			
 			if (0xC3 == _Params[0]){
 				found = true;
 				break;
 			}
 			
+			delay(100);
 		}
 	}
 	else {
@@ -686,8 +704,6 @@ bool EBYTE::ReadModelData() {
 	}
 
 	SetMode(MODE_NORMAL);
-
-	CompleteTask(1000);
 
 	return found;
 	
