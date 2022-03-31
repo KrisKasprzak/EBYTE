@@ -18,13 +18,17 @@ Usage of this library consumes around 970 bytes.
 
 You only really need this library to program these EBYTE units. 
 
-For reading data structures, you can call readBytes directly on the EBYTE Serial object
+For reading data structures, you can call readBytes method directly on the EBYTE's Serial object:
+<br>
 <br>
 <b>ESerial.readBytes((uint8_t*)& MyData, (uint8_t) sizeof(MyData));</b>
 <br>
-For writing data structures you can call write directly on the EBYTE Serial object
+<br>
+For writing data structures you can call write method directly on the EBYTE's Serial object
+<br>
 <br>
 <b>ESerial.write((uint8_t*) &MyData, (uint8_t) sizeof(MyData) );</b>
+<br>
 <br>
 <br>
 <b> EBYTE Model numbers (only a partial list shown)</b>
