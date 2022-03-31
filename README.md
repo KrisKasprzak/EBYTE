@@ -19,13 +19,14 @@ Usage of this library consumes around 970 bytes.
 You only really need this library to program these EBYTE units. 
 
 For reading data structures, you can call readBytes directly on the EBYTE Serial object
-
+<br>
 <b>ESerial.readBytes((uint8_t*)& MyData, (uint8_t) sizeof(MyData));</b>
-
+<br>
 For writing data structures you can call write directly on the EBYTE Serial object
+<br>
 <b>ESerial.write((uint8_t*) &MyData, (uint8_t) sizeof(MyData) );</b>
-
-
+<br>
+<br>
 <b> EBYTE Model numbers (only a partial list shown)</b>
 Old model number scheme 
 E30-TTL-100,E30-490T20D, E31-TTL-100, E32-TTL-100, E32-TTL-500, E32-TTL-1W, E41-TTL-100, E41-TTL-100, E44-TTL-100, E44-TTL-500, E44-TTL-1W, E50-TTL-100, E50-TTL-500, E51-TTL-100, E51-TTL-500, E51-TTL-1W
