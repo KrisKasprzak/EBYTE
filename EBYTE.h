@@ -1,5 +1,4 @@
- 
-/*
+ /*
   The MIT License (MIT)
   Copyright (c) 2019 Kris Kasrpzak
   Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -36,7 +35,6 @@
   5.0			12/4/2020	Kasprzak		moved Reset to public, added Clear to SetMode to avoid buffer corruption during programming
   5.5			1/26/2022	Kasprzak		added attempt parameter to limit the retries
 
-
   Module connection
   Module	MCU						Description
   MO		Any digital pin*		pin to control working/program modes
@@ -63,6 +61,10 @@
   
 */
 
+#ifndef EBYTE_H_LIB
+#define EBYTE_H_LIB
+
+#define EBYTE_H_LIB_VER
 
 #if ARDUINO >= 100
 #include "Arduino.h"
@@ -236,10 +238,8 @@ public:
 	uint8_t GetFECMode();
 	uint8_t GetTransmitPower();
 
-
 	uint8_t GetOptions();
 	uint8_t GetSpeed();
-
 		
 	// methods to get data from sending unit
 	uint8_t GetByte();
@@ -263,8 +263,6 @@ public:
 	void Reset();
 
 protected:
-
-
 
 	// function to read modules parameters
 	bool ReadParameters();
@@ -324,3 +322,4 @@ private:
 
 };
 
+#endif
