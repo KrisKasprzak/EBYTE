@@ -64,7 +64,7 @@
 #ifndef EBYTE_H_LIB
 #define EBYTE_H_LIB
 
-#define EBYTE_H_LIB_VER
+#define EBYTE_H_LIB_VER 5.5
 
 #if ARDUINO >= 100
 #include "Arduino.h"
