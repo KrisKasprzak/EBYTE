@@ -666,7 +666,7 @@ bool EBYTE::ReadModelData() {
 
 		// i'm not terribly sure this is the best way to retry
 		// may need to set the mode back to normal first....
-		for (i = 0; i < 5; i++){
+		for (i = 0; i < _Attempts; i++){
 			// Serial.print("trying: "); Serial.println(i);
 			_Params[0] = 0;
 			_Params[1] = 0;
