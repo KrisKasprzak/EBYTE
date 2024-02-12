@@ -3,7 +3,6 @@
   This example shows how to connect to an EBYTE transceiver
   using an ESP32
 
-/*
 
   This example shows how to connect to an EBYTE transceiver
   using an ESP32
