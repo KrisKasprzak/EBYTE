@@ -18,7 +18,7 @@ Usage of this library consumes around 970 bytes.
 
 You only really need this library to program these EBYTE units. 
 
-[![Github All Releases](https://img.shields.io/github/downloads/KrisKasprzak/EBYTE/total.svg)]()
+[![Downloads](https://static.pepy.tech/badge/video2tfrecord)](https://pepy.tech/project/video2tfrecord)
 
 For reading data structures, you can call readBytes method directly on the EBYTE's Serial object:
 <br>
