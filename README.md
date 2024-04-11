@@ -1,5 +1,5 @@
 #EBYTE
- 
+ [![Downloads](https://static.pepy.tech/badge/video2tfrecord)](https://pepy.tech/project/video2tfrecord)
  
 <b><h2><center>Updates </center>
 <li>3/20/2021, added ESP8266 and ESP32 examples</li>
