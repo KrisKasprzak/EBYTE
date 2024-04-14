@@ -110,7 +110,7 @@ For best range:
 <li> If transmitter and receiver are different MCU (Arduino <-> Teensy), sending data structures pay pack differently, regardless of structure data types. This is due to how an 8-bit processor and 32-bit processor handle the packing process. Option 1) is to use EasTransfer lib. I use this lib and it works well. Option 2) try the __attribute__((packed)) variable attribute. Option 3) and don't laugh, but if sending a float considering multiplying a float to 100 (and recasting to an int), then divide that value by 100 on the receiving end (recasting to a float)</li>
 
 <li> If you seem to get corrupt data from .PrintParameters, try addinng #include "avr/io.h" to your .INO program</li>
-
+<li> If you are powering  your EBYTE modules from a separate power source, make sure all grounds are connected</li>
 
 </ul>
 
