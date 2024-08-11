@@ -99,7 +99,9 @@ For best range:
 <li> If your wireless module is returning all 0's for the PrintParameters() method or just the model AND you are using hardware serial AND you are using an ESP32, make sure your are using  full serial definition in the begin() statement: like this</li>
 <br>
  - #include <HardwareSerial.h>
+  
  - #define Serial_0 Serial2
+   
  - Serial_0.begin(9600, SERIAL_8N1, 16, 17);
 
  
