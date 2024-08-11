@@ -34,6 +34,7 @@
   4.0			6/23/2020	Kasprzak		Added private method to clear the buffer to ensure read methods would not be filled with buffered data
   5.0			12/4/2020	Kasprzak		moved Reset to public, added Clear to SetMode to avoid buffer corruption during programming
   5.5			1/26/2022	Kasprzak		implemented attempt parameter and adjusted the pinmode delays--in an attempt to make NANO's connect more successful
+  5.7			8/10/2024	Kasprzak		fixed attempt iterator if connection is not made
   
 */
 
@@ -67,15 +68,17 @@ Initialize the unit--basicall this reads the modules parameters and stores the p
 for potential future module programming
 */
 
-bool EBYTE::init(uint8_t _Attempts) {
+bool EBYTE::init(uint8_t Attempts) {
 
 	bool ok = true;
-	
+
 	pinMode(_AUX, INPUT);
 	pinMode(_M0, OUTPUT);
 	pinMode(_M1, OUTPUT);
 
-	delay(10);
+	_Attempts = Attempts;
+	
+	delay(PIN_RECOVER);
 	
 	if (_Attempts < 1){
 		_Attempts = 1;
@@ -83,19 +86,19 @@ bool EBYTE::init(uint8_t _Attempts) {
 	if (_Attempts > 10){
 		_Attempts = 10;
 	}
-	
-	SetMode(MODE_NORMAL);
+
+	SetMode(EBYTE_MODE_NORMAL);
 
 	// first get the module data (must be called first for some odd reason
-	
 	ok = ReadModelData();
 
 	if (!ok) {
 		return false;
 	}
 	// now get parameters to put unit defaults into the class variables
-
 	ok = ReadParameters();
+	
+
 	if (!ok) {
 		return false;
 	}
@@ -212,8 +215,10 @@ void EBYTE::CompleteTask(unsigned long timeout) {
 	if (_AUX != -1) {
 		
 		while (digitalRead(_AUX) == LOW) {
-			delay(PIN_RECOVER);
+			//Serial.println("waiting for aux");
+			delay(2);
 			if ((millis() - t) > timeout){
+				//Serial.println("aux timeout");
 				break;
 			}
 		}
@@ -239,13 +244,12 @@ void EBYTE::SetMode(uint8_t mode) {
 
 	delay(PIN_RECOVER);
 	
-	if (mode == MODE_NORMAL) {
-
+	if (mode == EBYTE_MODE_NORMAL) {
 		digitalWrite(_M0, LOW);
 		digitalWrite(_M1, LOW);
+
 	}
 	else if (mode == MODE_WAKEUP) {
-
 		digitalWrite(_M0, HIGH);
 		digitalWrite(_M1, LOW);
 
@@ -253,10 +257,12 @@ void EBYTE::SetMode(uint8_t mode) {
 	else if (mode == MODE_POWERDOWN) {
 		digitalWrite(_M0, LOW);
 		digitalWrite(_M1, HIGH);
+
 	}
 	else if (mode == MODE_PROGRAM) {
 		digitalWrite(_M0, HIGH);
 		digitalWrite(_M1, HIGH);
+
 	}
 
 	// data sheet says 2ms later control is returned, let's give just a bit more time
@@ -304,7 +310,7 @@ void EBYTE::Reset() {
 
 	CompleteTask(4000);
 
-	SetMode(MODE_NORMAL);
+	SetMode(EBYTE_MODE_NORMAL);
 
 }
 
@@ -477,6 +483,7 @@ method to build the byte for programming (notice it's a collection of a few vari
 void EBYTE::BuildSpeedByte() {
 	_Speed = 0;
 	_Speed = ((_ParityBit & 0xFF) << 6) | ((_UARTDataRate & 0xFF) << 3) | (_AirDataRate & 0xFF);
+
 }
 
 
@@ -502,10 +509,10 @@ method to save parameters to the module
 void EBYTE::SaveParameters(uint8_t val) {
 	
 	SetMode(MODE_PROGRAM);
-	
-	// ClearBuffer();
-
 	/*
+	ClearBuffer();
+
+	
 	Serial.print("val: ");
 	Serial.println(val);
 
@@ -537,7 +544,7 @@ void EBYTE::SaveParameters(uint8_t val) {
 
 	CompleteTask(4000);
 	
-	SetMode(MODE_NORMAL);
+	SetMode(EBYTE_MODE_NORMAL);
 
 	
 }
@@ -590,7 +597,7 @@ method to read parameters,
 */
 
 bool EBYTE::ReadParameters() {
-
+	
 	_Params[0] = 0;
 	_Params[1] = 0;
 	_Params[2] = 0;
@@ -601,11 +608,8 @@ bool EBYTE::ReadParameters() {
 	SetMode(MODE_PROGRAM);
 
 	_s->write(0xC1);
-
 	_s->write(0xC1);
-
 	_s->write(0xC1);
-
 	_s->readBytes((uint8_t*)&_Params, (uint8_t) sizeof(_Params));
 
 	_Save = _Params[0];
@@ -626,10 +630,9 @@ bool EBYTE::ReadParameters() {
 	_OptionFEC = (_Options & 0X07) >> 2;
 	_OptionPower = (_Options & 0X03);
 	
-	SetMode(MODE_NORMAL);
+	SetMode(EBYTE_MODE_NORMAL);
 
 	if (0xC0 != _Params[0]){
-		
 		return false;
 	}
 
@@ -646,28 +649,34 @@ bool EBYTE::ReadModelData() {
 	_Params[3] = 0;
 	_Params[4] = 0;
 	_Params[5] = 0;
-
+	
 	bool found = false;
 	int i = 0;
 	
 	SetMode(MODE_PROGRAM);
-	
 	_s->write(0xC3);
 	_s->write(0xC3);
 	_s->write(0xC3);
 	_s->readBytes((uint8_t*)& _Params, (uint8_t) sizeof(_Params));
-	
 	_Save = _Params[0];	
 	_Model = _Params[1];
 	_Version = _Params[2];
 	_Features = _Params[3];	
-
-	if (0xC3 != _Params[0]) {
-
+	SetMode(EBYTE_MODE_NORMAL);
+	
+	//Serial.print("_Params[0] ");Serial.println(_Save);
+	//Serial.print("_Params[1] ");Serial.println(_Model);
+	//Serial.print("_Params[2] ");Serial.println(_Version);
+	//Serial.print("_Params[3] ");Serial.println(_Features);
+	
+		
+	if (0xC3 != _Save) {
+		
+	
 		// i'm not terribly sure this is the best way to retry
 		// may need to set the mode back to normal first....
-		for (i = 0; i < _Attempts; i++){
-			// Serial.print("trying: "); Serial.println(i);
+		for (i = 0; i < _Attempts; i++){	
+			SetMode(MODE_PROGRAM);
 			_Params[0] = 0;
 			_Params[1] = 0;
 			_Params[2] = 0;
@@ -678,32 +687,36 @@ bool EBYTE::ReadModelData() {
 			_s->write(0xC3);
 			_s->write(0xC3);
 			_s->write(0xC3);
-			
+	
 			_s->readBytes((uint8_t*)& _Params, (uint8_t) sizeof(_Params));
+			_Save = _Params[0];	
+			_Model = _Params[1];
+			_Version = _Params[2];
+			_Features = _Params[3];	
+			SetMode(EBYTE_MODE_NORMAL);
+			//Serial.print("_Attempts ");Serial.println(_Attempts);
+			//Serial.print("_Params[0] ");Serial.println(_Params[0]);
+			//Serial.print("_Params[1] ");Serial.println(_Params[1]);
+			//Serial.print("_Params[2] ");Serial.println(_Params[2]);
+			//Serial.print("_Params[3] ");Serial.println(_Params[3]);
+			//Serial.print("_Params[4] ");Serial.println(_Params[4]);
+			//Serial.print("_Params[5] ");Serial.println(_Params[5]);
 			
-			/*
-			Serial.print("_Attempts ");Serial.println(_Attempts);
-			Serial.print("_Params[0] ");Serial.println(_Params[0]);
-			Serial.print("_Params[1] ");Serial.println(_Params[1]);
-			Serial.print("_Params[2] ");Serial.println(_Params[2]);
-			Serial.print("_Params[3] ");Serial.println(_Params[3]);
-			Serial.print("_Params[4] ");Serial.println(_Params[4]);
-			Serial.print("_Params[5] ");Serial.println(_Params[5]);
-			*/
 			
 			if (0xC3 == _Params[0]){
 				found = true;
 				break;
 			}
-			
+
 			delay(100);
+
 		}
 	}
 	else {
 		found = true;
 	}
 
-	SetMode(MODE_NORMAL);
+	SetMode(EBYTE_MODE_NORMAL);
 
 	return found;
 	
@@ -756,9 +769,9 @@ void EBYTE::ClearBuffer(){
 	while(_s->available()) {
 		_s->read();
 		if ((millis() - amt) > 5000) {
-          Serial.println("runaway");
-          break;
-        }
+          		Serial.println("runaway");
+          		break;
+        	}
 	}
 
 }
