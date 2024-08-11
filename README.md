@@ -95,6 +95,13 @@ For best range:
 </ul>
 <b><h3>Debugging</b></h3>
 <ul>
+ 
+<li> If your wireless module is returning all 0's for the PrintParameters() method or just the model AND you are using hardware serial AND you are using an ESP32, make sure your are using  full serial definition in the begin() statement: like this</li>
+#include <HardwareSerial.h>
+#define Serial_0 Serial2
+Serial_0.begin(9600, SERIAL_8N1, 16, 17);
+
+ 
  <li> If your wireless module is returning all 0's for the PrintParameters() method, make sure your wiring is correct and working, MCU Rx needs to connecte to the EBYTE Tx and vice versa. Also make sure M0, M0, and AUX are connected to valid digital ports. Most issues are due to incorrect data line connections </li>
  
 <li> If your wireless module is returning all 0's for the PrintParameters() method, AND you are sure your wiring is correct, your module may be slow to react to pinMode change performed during a mode change. The datasheet says delay of 2 ms is needed, but I've found 10 ms is more reliable. With some units, even more time is needed. The library default is 50 ms, but increase this in the .h file if parameters are not correctly read.</li>
