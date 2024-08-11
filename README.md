@@ -97,9 +97,10 @@ For best range:
 <ul>
  
 <li> If your wireless module is returning all 0's for the PrintParameters() method or just the model AND you are using hardware serial AND you are using an ESP32, make sure your are using  full serial definition in the begin() statement: like this</li>
-- #include <HardwareSerial.h>
-- #define Serial_0 Serial2
-- Serial_0.begin(9600, SERIAL_8N1, 16, 17);
+<br>
+ - #include <HardwareSerial.h>
+ - #define Serial_0 Serial2
+ - Serial_0.begin(9600, SERIAL_8N1, 16, 17);
 
  
  <li> If your wireless module is returning all 0's for the PrintParameters() method, make sure your wiring is correct and working, MCU Rx needs to connecte to the EBYTE Tx and vice versa. Also make sure M0, M0, and AUX are connected to valid digital ports. Most issues are due to incorrect data line connections </li>
